@@ -96,23 +96,9 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(ColorDark)
 	for _, t := range g.Towers {
-		ebitenutil.DrawRect(
-			screen,
-			float64(t.Coords.X),
-			float64(t.Coords.Y),
-			2,
-			2,
-			ColorLight,
-		)
+		drawSquare(screen, t.Coords, 2, ColorLight)
 	}
-	ebitenutil.DrawRect(
-		screen,
-		float64(g.Cursor.Coords.X),
-		float64(g.Cursor.Coords.Y),
-		2,
-		2,
-		ColorLight,
-	)
+	drawSquare(screen, g.Cursor.Coords, 2, ColorLight)
 }
 
 // Cursor is used to interact with game entities at the given coordinates
@@ -132,3 +118,16 @@ type Tower struct {
 
 // Towers is a slice of Tower entities
 type Towers []*Tower
+
+// drawSquare is a convenience wrapper mapping point coordinates to float values
+// and reducing repetition when the rectangles sides have a ratio of 1:1
+func drawSquare(dest *ebiten.Image, pos image.Point, size int, color color.Color) {
+	ebitenutil.DrawRect(
+		dest,
+		float64(pos.X),
+		float64(pos.Y),
+		float64(size),
+		float64(size),
+		color,
+	)
+}
