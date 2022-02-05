@@ -34,7 +34,7 @@ func main() {
 
 	game := &Game{
 		Size:   GameSize,
-		Cursor: &Cursor{image.Pt(GameSize.X/2, GameSize.Y/2)},
+		Cursor: NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2)),
 	}
 
 	if err := ebiten.RunGame(game); err != nil {
@@ -98,12 +98,35 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, t := range g.Towers {
 		drawSquare(screen, t.Coords, 2, ColorLight)
 	}
-	drawSquare(screen, g.Cursor.Coords, 2, ColorLight)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(g.Cursor.Coords.X), float64(g.Cursor.Coords.Y))
+	screen.DrawImage(g.Cursor.Image, op)
 }
 
 // Cursor is used to interact with game entities at the given coordinates
 type Cursor struct {
 	Coords image.Point
+	Image  *ebiten.Image
+}
+
+// NewCursor creates a new cursor struct at the given coordinates
+// It is shaped like a crosshair and is used to interact with the game
+func NewCursor(coords image.Point) *Cursor {
+
+	i := image.NewPaletted(
+		image.Rect(0, 0, 3, 3),
+		NokiaPalette,
+	)
+	i.Pix = []uint8{
+		0, 1, 0,
+		1, 0, 1,
+		0, 1, 0,
+	}
+
+	return &Cursor{
+		Coords: coords,
+		Image:  ebiten.NewImageFromImage(i),
+	}
 }
 
 // Move moves the player upwards
