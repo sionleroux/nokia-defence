@@ -17,12 +17,15 @@ import (
 
 // Media settings based on the Nokia 3310 jam restrictions
 var (
+	// ColorTransparent is completely transparent, used for images that aren't
+	// square shaped to show the underlying colour
+	ColorTransparent color.Color = color.RGBA{67, 82, 61, 0}
 	// ColorLight is the ON or 1 screen colour, similar to white
 	ColorLight color.Color = color.RGBA{199, 240, 216, 255}
 	// ColorDark is the OFF or 0 screen colour, similar to black
 	ColorDark color.Color = color.RGBA{67, 82, 61, 255}
 	// NokiaPalette is a 1-bit palette of greenish colours simulating Nokia 3310
-	NokiaPalette color.Palette = color.Palette{ColorDark, ColorLight}
+	NokiaPalette color.Palette = color.Palette{ColorTransparent, ColorDark, ColorLight}
 	// GameSize is the screen resolution of a Nokia 3310
 	GameSize image.Point = image.Point{84, 48}
 )
@@ -118,9 +121,9 @@ func NewCursor(coords image.Point) *Cursor {
 		NokiaPalette,
 	)
 	i.Pix = []uint8{
-		0, 1, 0,
-		1, 0, 1,
-		0, 1, 0,
+		0, 2, 0,
+		2, 0, 2,
+		0, 2, 0,
 	}
 
 	return &Cursor{
