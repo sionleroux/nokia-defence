@@ -46,6 +46,7 @@ func main() {
 type Game struct {
 	Size   image.Point
 	Cursor *Cursor
+	Towers Towers
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
@@ -84,7 +85,9 @@ func (g *Game) Update() error {
 		g.Cursor.Move(image.Pt(1, 0))
 	}
 
-	// XXX: Write game logic here
+	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
+		g.Towers = append(g.Towers, &Tower{g.Cursor.Coords})
+	}
 
 	return nil
 }
@@ -92,6 +95,16 @@ func (g *Game) Update() error {
 // Draw draws the game screen by one frame
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(ColorDark)
+	for _, t := range g.Towers {
+		ebitenutil.DrawRect(
+			screen,
+			float64(t.Coords.X),
+			float64(t.Coords.Y),
+			2,
+			2,
+			ColorLight,
+		)
+	}
 	ebitenutil.DrawRect(
 		screen,
 		float64(g.Cursor.Coords.X),
@@ -111,3 +124,11 @@ type Cursor struct {
 func (c *Cursor) Move(dest image.Point) {
 	c.Coords = c.Coords.Add(dest)
 }
+
+// Tower can be placed at a position to shoot Creeps
+type Tower struct {
+	Coords image.Point
+}
+
+// Towers is a slice of Tower entities
+type Towers []*Tower
