@@ -11,7 +11,9 @@ This is a submission for [Nokia 3310 Jam 4](https://itch.io/jam/nokiajam4) made 
 
 ## For game testers
 
-<!-- TODO: add a link to the latest downloads page -->
+For alpha testing use this [link to download the latest development build][nightly-link] including Windows EXE, Mac app, Linux binary, as well as other resources for testing and editing.
+
+[nightly-link]: https://nightly.link/sinisterstuf/nokia-defence/workflows/build/main/nokia-defence-bundle.zip
 
 Game controls:
 - F: toggle full-screen
