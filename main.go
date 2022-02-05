@@ -15,16 +15,26 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-func main() {
-	gameWidth, gameHeight := 640, 480
+// Media settings based on the Nokia 3310 jam restrictions
+var (
+	// ColorLight is the ON or 1 screen colour, similar to white
+	ColorLight color.Color = color.RGBA{199, 240, 216, 255}
+	// ColorDark is the OFF or 0 screen colour, similar to black
+	ColorDark color.Color = color.RGBA{67, 82, 61, 255}
+	// NokiaPalette is a 1-bit palette of greenish colours simulating Nokia 3310
+	NokiaPalette color.Palette = color.Palette{ColorDark, ColorLight}
+	// GameSize is the screen resolution of a Nokia 3310
+	GameSize image.Point = image.Point{84, 48}
+)
 
-	ebiten.SetWindowSize(gameWidth, gameHeight)
-	ebiten.SetWindowTitle("nokia-defence")
+func main() {
+	windowScale := 10
+	ebiten.SetWindowSize(GameSize.X*windowScale, GameSize.Y*windowScale)
+	ebiten.SetWindowTitle("Nokia Defence")
 
 	game := &Game{
-		Width:  gameWidth,
-		Height: gameHeight,
-		Player: &Player{image.Pt(gameWidth/2, gameHeight/2)},
+		Size:   GameSize,
+		Player: &Player{image.Pt(GameSize.X/2, GameSize.Y/2)},
 	}
 
 	if err := ebiten.RunGame(game); err != nil {
@@ -34,14 +44,13 @@ func main() {
 
 // Game represents the main game state
 type Game struct {
-	Width  int
-	Height int
+	Size   image.Point
 	Player *Player
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
 func (g *Game) Layout(outsideWidth int, outsideHeight int) (screenWidth int, screenHeight int) {
-	return g.Width, g.Height
+	return g.Size.X, g.Size.Y
 }
 
 // Update calculates game logic
@@ -73,13 +82,14 @@ func (g *Game) Update() error {
 
 // Draw draws the game screen by one frame
 func (g *Game) Draw(screen *ebiten.Image) {
+	screen.Fill(ColorDark)
 	ebitenutil.DrawRect(
 		screen,
 		float64(g.Player.Coords.X),
 		float64(g.Player.Coords.Y),
 		20,
 		20,
-		color.White,
+		ColorLight,
 	)
 }
 
