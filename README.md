@@ -16,7 +16,8 @@ This is a submission for [Nokia 3310 Jam 4](https://itch.io/jam/nokiajam4) made 
 Game controls:
 - F: toggle full-screen
 - Q: quit the game
-- Space: move up
+- WASD: move cursor
+- E: place a tower (action)
 
 ## For programmers
 
