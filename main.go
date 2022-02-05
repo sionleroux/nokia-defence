@@ -34,7 +34,7 @@ func main() {
 
 	game := &Game{
 		Size:   GameSize,
-		Player: &Player{image.Pt(GameSize.X/2, GameSize.Y/2)},
+		Cursor: &Cursor{image.Pt(GameSize.X/2, GameSize.Y/2)},
 	}
 
 	if err := ebiten.RunGame(game); err != nil {
@@ -45,7 +45,7 @@ func main() {
 // Game represents the main game state
 type Game struct {
 	Size   image.Point
-	Player *Player
+	Cursor *Cursor
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
@@ -72,16 +72,16 @@ func (g *Game) Update() error {
 
 	// Movement controls
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		g.Player.Move(image.Pt(0, 1))
+		g.Cursor.Move(image.Pt(0, 1))
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		g.Player.Move(image.Pt(0, -1))
+		g.Cursor.Move(image.Pt(0, -1))
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		g.Player.Move(image.Pt(-1, 0))
+		g.Cursor.Move(image.Pt(-1, 0))
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		g.Player.Move(image.Pt(1, 0))
+		g.Cursor.Move(image.Pt(1, 0))
 	}
 
 	// XXX: Write game logic here
@@ -94,20 +94,20 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(ColorDark)
 	ebitenutil.DrawRect(
 		screen,
-		float64(g.Player.Coords.X),
-		float64(g.Player.Coords.Y),
-		20,
-		20,
+		float64(g.Cursor.Coords.X),
+		float64(g.Cursor.Coords.Y),
+		2,
+		2,
 		ColorLight,
 	)
 }
 
-// Player is the player character in the game
-type Player struct {
+// Cursor is used to interact with game entities at the given coordinates
+type Cursor struct {
 	Coords image.Point
 }
 
 // Move moves the player upwards
-func (p *Player) Move(dest image.Point) {
-	p.Coords = p.Coords.Add(dest)
+func (c *Cursor) Move(dest image.Point) {
+	c.Coords = c.Coords.Add(dest)
 }
