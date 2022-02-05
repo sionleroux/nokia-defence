@@ -1,4 +1,4 @@
-# ebiten-game-template
+# nokia-defence
 
 A basic skeleton for a 2D game using the [Ebiten](https://ebiten.org/) library.
 
@@ -15,7 +15,7 @@ Game controls:
 
 Make sure you have [Go 1.17 or later](https://go.dev/) to contribute to the game
 
-To build the game yourself, run: `go build .` it will produce an ebiten-game-template file and on Windows ebiten-game-template.exe.
+To build the game yourself, run: `go build .` it will produce an nokia-defence file and on Windows nokia-defence.exe.
 
 To run the tests, run: `go test ./...` but there are no tests yet.
 

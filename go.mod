@@ -1,4 +1,4 @@
-module github.com/sinisterstuf/ebiten-game-template
+module github.com/sinisterstuf/nokia-defence
 
 go 1.17
 
