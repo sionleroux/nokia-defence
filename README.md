@@ -1,6 +1,13 @@
-# nokia-defence
+# Nokia Defence
 
-A basic skeleton for a 2D game using the [Ebiten](https://ebiten.org/) library.
+A Tower Defence game for Web and Desktop written as if for the Nokia 3310:
+
+- 84x48 screen resolution
+- only 2 colours light/dark green
+- monophonic music only
+- max 12 buttons allowed
+
+This is a submission for [Nokia 3310 Jam 4](https://itch.io/jam/nokiajam4) made using the [Ebiten](https://ebiten.org/) library.
 
 ## For game testers
 
