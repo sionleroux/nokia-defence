@@ -119,7 +119,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	screen.Fill(ColorDark)
 	for _, t := range g.Towers {
-		op.GeoM.Translate(float64(t.Coords.X), float64(t.Coords.Y))
+		op.GeoM.Translate(float64(t.Coords.X-1), float64(t.Coords.Y-1))
 		screen.DrawImage(ImageBasicTower, op)
 		op.GeoM.Reset()
 	}
