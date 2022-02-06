@@ -11,7 +11,6 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
@@ -28,7 +27,27 @@ var (
 	NokiaPalette color.Palette = color.Palette{ColorTransparent, ColorDark, ColorLight}
 	// GameSize is the screen resolution of a Nokia 3310
 	GameSize image.Point = image.Point{84, 48}
+
+	ImageBasicTower *ebiten.Image
 )
+
+func init() {
+
+	i := image.NewPaletted(
+		image.Rect(0, 0, 5, 5),
+		NokiaPalette,
+	)
+
+	i.Pix = []uint8{
+		2, 2, 2, 2, 2,
+		2, 1, 1, 1, 2,
+		2, 1, 1, 1, 2,
+		2, 1, 1, 1, 2,
+		2, 2, 2, 2, 2,
+	}
+	ImageBasicTower = ebiten.NewImageFromImage(i)
+
+}
 
 func main() {
 	windowScale := 10
@@ -97,11 +116,13 @@ func (g *Game) Update() error {
 
 // Draw draws the game screen by one frame
 func (g *Game) Draw(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
 	screen.Fill(ColorDark)
 	for _, t := range g.Towers {
-		drawSquare(screen, t.Coords, 2, ColorLight)
+		op.GeoM.Translate(float64(t.Coords.X), float64(t.Coords.Y))
+		screen.DrawImage(ImageBasicTower, op)
+		op.GeoM.Reset()
 	}
-	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(g.Cursor.Coords.X), float64(g.Cursor.Coords.Y))
 	screen.DrawImage(g.Cursor.Image, op)
 }
@@ -144,16 +165,3 @@ type Tower struct {
 
 // Towers is a slice of Tower entities
 type Towers []*Tower
-
-// drawSquare is a convenience wrapper mapping point coordinates to float values
-// and reducing repetition when the rectangles sides have a ratio of 1:1
-func drawSquare(dest *ebiten.Image, pos image.Point, size int, color color.Color) {
-	ebitenutil.DrawRect(
-		dest,
-		float64(pos.X),
-		float64(pos.Y),
-		float64(size),
-		float64(size),
-		color,
-	)
-}
