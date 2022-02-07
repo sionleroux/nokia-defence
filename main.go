@@ -5,14 +5,20 @@
 package main
 
 import (
+	"embed"
 	"errors"
 	"image"
 	"image/color"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
+
+//go:embed assets/*
+var assets embed.FS
 
 // Media settings based on the Nokia 3310 jam restrictions
 var (
@@ -35,6 +41,16 @@ func main() {
 	windowScale := 10
 	ebiten.SetWindowSize(GameSize.X*windowScale, GameSize.Y*windowScale)
 	ebiten.SetWindowTitle("Nokia Defence")
+
+	// Music
+	const sampleRate int = 44100 // assuming "normal" sample rate
+	music := loadSoundFile("assets/construction.ogg", sampleRate)
+	musicLoop := audio.NewInfiniteLoop(music, music.Length())
+	musicPlayer, err := audio.NewPlayer(audio.NewContext(sampleRate), musicLoop)
+	if err != nil {
+		log.Fatalf("error making music player: %v\n", err)
+	}
+	musicPlayer.Play()
 
 	game := &Game{
 		Size:   GameSize,
@@ -161,4 +177,22 @@ func (c *Cursor) Move(dest image.Point) {
 type Entity interface {
 	Update(g *Game)
 	Draw(g *Game, screen *ebiten.Image)
+}
+
+// Load an OGG Vorbis sound file with 44100 sample rate and return its stream
+func loadSoundFile(name string, sampleRate int) *vorbis.Stream {
+	log.Printf("loading %s\n", name)
+
+	file, err := assets.Open(name)
+	if err != nil {
+		log.Fatalf("error opening file %s: %v\n", name, err)
+	}
+	defer file.Close()
+
+	music, err := vorbis.DecodeWithSampleRate(sampleRate, file)
+	if err != nil {
+		log.Fatalf("error decoding file %s as Vorbis: %v\n", name, err)
+	}
+
+	return music
 }
