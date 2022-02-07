@@ -27,6 +27,8 @@ var (
 	NokiaPalette color.Palette = color.Palette{ColorTransparent, ColorDark, ColorLight}
 	// GameSize is the screen resolution of a Nokia 3310
 	GameSize image.Point = image.Point{84, 48}
+	// StartingMoney is the amount of money you start the game with
+	StartingMoney int = 1000
 )
 
 func main() {
@@ -37,6 +39,7 @@ func main() {
 	game := &Game{
 		Size:   GameSize,
 		Cursor: NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2)),
+		Money:  StartingMoney,
 	}
 
 	if err := ebiten.RunGame(game); err != nil {
@@ -49,6 +52,7 @@ type Game struct {
 	Size   image.Point
 	Cursor *Cursor
 	Towers Towers
+	Money  int
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
@@ -89,10 +93,22 @@ func (g *Game) Update() error {
 
 	// Tower placement controls
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
-		g.Towers = append(g.Towers, NewBasicTower(g.Cursor.Coords))
+		t := NewBasicTower(g.Cursor.Coords)
+		moneydiff := g.Money - t.Cost
+		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
+		if moneydiff >= 0 {
+			g.Towers = append(g.Towers, t)
+			g.Money = moneydiff
+		}
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyZ) {
-		g.Towers = append(g.Towers, NewStrongTower(g.Cursor.Coords))
+		t := NewStrongTower(g.Cursor.Coords)
+		moneydiff := g.Money - t.Cost
+		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
+		if moneydiff >= 0 {
+			g.Towers = append(g.Towers, t)
+			g.Money = moneydiff
+		}
 	}
 
 	return nil

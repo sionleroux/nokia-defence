@@ -13,23 +13,24 @@ import (
 // Tower can be placed at a position to shoot Creeps
 type Tower struct {
 	Coords image.Point
+	Cost   int
 	Image  *ebiten.Image
 }
 
 // NewTower makes a new tower provided image pixel input
-func NewTower(coords image.Point, size int, pix []uint8) *Tower {
+func NewTower(coords image.Point, cost, size int, pix []uint8) *Tower {
 	i := image.NewPaletted(
 		image.Rect(0, 0, size, size),
 		NokiaPalette,
 	)
 	i.Pix = pix
 
-	return &Tower{coords, ebiten.NewImageFromImage(i)}
+	return &Tower{coords, cost, ebiten.NewImageFromImage(i)}
 }
 
 // NewBasicTower is a convenience wrapper to make a basic-looking tower
 func NewBasicTower(coords image.Point) *Tower {
-	return NewTower(coords, 5, []uint8{
+	return NewTower(coords, 200, 5, []uint8{
 		2, 2, 2, 2, 2,
 		2, 1, 1, 1, 2,
 		2, 1, 1, 1, 2,
@@ -40,7 +41,7 @@ func NewBasicTower(coords image.Point) *Tower {
 
 // NewStrongTower is a convenience wrapper to make a strong-looking tower
 func NewStrongTower(coords image.Point) *Tower {
-	return NewTower(coords, 5, []uint8{
+	return NewTower(coords, 500, 5, []uint8{
 		2, 2, 2, 2, 2,
 		2, 2, 1, 2, 2,
 		2, 1, 1, 1, 2,
