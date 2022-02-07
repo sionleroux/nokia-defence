@@ -87,8 +87,12 @@ func (g *Game) Update() error {
 		g.Cursor.Move(image.Pt(1, 0))
 	}
 
+	// Tower placement controls
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
-		g.Towers = append(g.Towers, &Tower{g.Cursor.Coords})
+		g.Towers = append(g.Towers, NewBasicTower(g.Cursor.Coords))
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyZ) {
+		g.Towers = append(g.Towers, NewStrongTower(g.Cursor.Coords))
 	}
 
 	return nil
