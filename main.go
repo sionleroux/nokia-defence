@@ -98,14 +98,8 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	screen.Fill(ColorDark)
-	for ti, t := range g.Towers {
-		op.GeoM.Translate(float64(t.Coords.X-1), float64(t.Coords.Y-1))
-		if ti%2 == 0 {
-			screen.DrawImage(ImageBasicTower, op)
-		} else {
-			screen.DrawImage(ImageStrongTower, op)
-		}
-		op.GeoM.Reset()
+	for _, t := range g.Towers {
+		t.Draw(g, screen)
 	}
 	op.GeoM.Translate(float64(g.Cursor.Coords.X), float64(g.Cursor.Coords.Y))
 	screen.DrawImage(g.Cursor.Image, op)
@@ -140,4 +134,11 @@ func NewCursor(coords image.Point) *Cursor {
 // Move moves the player upwards
 func (c *Cursor) Move(dest image.Point) {
 	c.Coords = c.Coords.Add(dest)
+}
+
+// Entity is anything that can be interacted with in the game and drawn  to the
+// screen, like Towers and Creeps
+type Entity interface {
+	Update(g *Game)
+	Draw(g *Game, screen *ebiten.Image)
 }

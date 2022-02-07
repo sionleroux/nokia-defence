@@ -47,5 +47,17 @@ type Tower struct {
 	Coords image.Point
 }
 
+// Update handles game logic for towers
+func (t *Tower) Update(g *Game) {
+	panic("not implemented") // TODO: Implement
+}
+
+// Draw draws the Tower to the screen
+func (t *Tower) Draw(g *Game, screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(t.Coords.X-1), float64(t.Coords.Y-1))
+	screen.DrawImage(ImageBasicTower, op)
+}
+
 // Towers is a slice of Tower entities
-type Towers []*Tower
+type Towers []Entity
