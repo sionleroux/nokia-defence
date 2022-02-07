@@ -27,37 +27,7 @@ var (
 	NokiaPalette color.Palette = color.Palette{ColorTransparent, ColorDark, ColorLight}
 	// GameSize is the screen resolution of a Nokia 3310
 	GameSize image.Point = image.Point{84, 48}
-
-	ImageBasicTower  *ebiten.Image
-	ImageStrongTower *ebiten.Image
 )
-
-func init() {
-
-	i := image.NewPaletted(
-		image.Rect(0, 0, 5, 5),
-		NokiaPalette,
-	)
-
-	i.Pix = []uint8{
-		2, 2, 2, 2, 2,
-		2, 1, 1, 1, 2,
-		2, 1, 1, 1, 2,
-		2, 1, 1, 1, 2,
-		2, 2, 2, 2, 2,
-	}
-	ImageBasicTower = ebiten.NewImageFromImage(i)
-
-	i.Pix = []uint8{
-		2, 2, 2, 2, 2,
-		2, 2, 1, 2, 2,
-		2, 1, 1, 1, 2,
-		2, 2, 1, 2, 2,
-		2, 2, 2, 2, 2,
-	}
-	ImageStrongTower = ebiten.NewImageFromImage(i)
-
-}
 
 func main() {
 	windowScale := 10
@@ -171,11 +141,3 @@ func NewCursor(coords image.Point) *Cursor {
 func (c *Cursor) Move(dest image.Point) {
 	c.Coords = c.Coords.Add(dest)
 }
-
-// Tower can be placed at a position to shoot Creeps
-type Tower struct {
-	Coords image.Point
-}
-
-// Towers is a slice of Tower entities
-type Towers []*Tower
