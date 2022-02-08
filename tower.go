@@ -14,6 +14,7 @@ import (
 type Tower struct {
 	Coords image.Point
 	Cost   int
+	Frame  int
 	Image  *ebiten.Image
 }
 
@@ -25,7 +26,7 @@ func NewTower(coords image.Point, cost, size int, pix []uint8) *Tower {
 	)
 	i.Pix = pix
 
-	return &Tower{coords, cost, ebiten.NewImageFromImage(i)}
+	return &Tower{coords, cost, 0, ebiten.NewImageFromImage(i)}
 }
 
 // NewBasicTower is a convenience wrapper to make a basic-looking tower
@@ -52,14 +53,22 @@ func NewStrongTower(coords image.Point) *Tower {
 
 // Update handles game logic for towers
 func (t *Tower) Update(g *Game) {
-	panic("not implemented") // TODO: Implement
+	if t.Frame < len(g.BasicSprite)-1 {
+		t.Frame++
+	}
 }
 
 // Draw draws the Tower to the screen
 func (t *Tower) Draw(g *Game, screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(t.Coords.X-1), float64(t.Coords.Y-1))
-	screen.DrawImage(t.Image, op)
+	frame := g.BasicSprite[t.Frame]
+	screen.DrawImage(g.BasicImage.SubImage(image.Rect(
+		frame.Position.X,
+		frame.Position.Y,
+		frame.Position.X+frame.Position.W,
+		frame.Position.Y+frame.Position.H,
+	)).(*ebiten.Image), op)
 }
 
 // Towers is a slice of Tower entities

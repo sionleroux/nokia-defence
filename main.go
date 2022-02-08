@@ -6,9 +6,12 @@ package main
 
 import (
 	"embed"
+	"encoding/json"
 	"errors"
 	"image"
 	"image/color"
+	"image/png"
+	"io/ioutil"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -52,10 +55,16 @@ func main() {
 	}
 	musicPlayer.Play()
 
+	// Sprites
+	basicsprite := loadSprite("assets/basic-tower")
+	basicimage := loadImage("assets/basic-tower.png")
+
 	game := &Game{
-		Size:   GameSize,
-		Cursor: NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2)),
-		Money:  StartingMoney,
+		Size:        GameSize,
+		Cursor:      NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2)),
+		Money:       StartingMoney,
+		BasicSprite: basicsprite,
+		BasicImage:  basicimage,
 	}
 
 	if err := ebiten.RunGame(game); err != nil {
@@ -65,10 +74,12 @@ func main() {
 
 // Game represents the main game state
 type Game struct {
-	Size   image.Point
-	Cursor *Cursor
-	Towers Towers
-	Money  int
+	Size        image.Point
+	Cursor      *Cursor
+	Towers      Towers
+	Money       int
+	BasicSprite Sprite
+	BasicImage  *ebiten.Image
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
@@ -105,6 +116,10 @@ func (g *Game) Update() error {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		g.Cursor.Move(image.Pt(1, 0))
+	}
+
+	for _, t := range g.Towers {
+		t.Update(g)
 	}
 
 	// Tower placement controls
@@ -195,4 +210,64 @@ func loadSoundFile(name string, sampleRate int) *vorbis.Stream {
 	}
 
 	return music
+}
+
+type Frame struct {
+	Duration int           `json:"duration"`
+	Position FramePosition `json:"frame"`
+}
+
+type FramePosition struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+	W int `json:"w"`
+	H int `json:"h"`
+}
+
+type Sprite []Frame
+
+type SpriteSheet struct {
+	Sprite Sprite `json:"frames"`
+}
+
+// Load an OGG Vorbis sound file with 44100 sample rate and return its stream
+func loadSprite(name string) Sprite {
+	log.Printf("loading %s\n", name)
+
+	file, err := assets.Open(name + ".json")
+	if err != nil {
+		log.Fatalf("error opening file %s: %v\n", name, err)
+	}
+	defer file.Close()
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var ss SpriteSheet
+	json.Unmarshal(data, &ss)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return ss.Sprite
+}
+
+// Load an image from embedded FS into an ebiten Image object
+func loadImage(name string) *ebiten.Image {
+	log.Printf("loading %s\n", name)
+
+	file, err := assets.Open(name)
+	if err != nil {
+		log.Fatalf("error opening file %s: %v\n", name, err)
+	}
+	defer file.Close()
+
+	raw, err := png.Decode(file)
+	if err != nil {
+		log.Fatalf("error decoding file %s as PNG: %v\n", name, err)
+	}
+
+	return ebiten.NewImageFromImage(raw)
 }
