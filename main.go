@@ -18,6 +18,9 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 )
 
 //go:embed assets/*
@@ -59,12 +62,16 @@ func main() {
 	basicsprite := loadSprite("assets/basic-tower")
 	basicimage := loadImage("assets/basic-tower.png")
 
+	// Fonts
+	font := loadFont("assets/tinier.ttf")
+
 	game := &Game{
 		Size:        GameSize,
 		Cursor:      NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2)),
 		Money:       StartingMoney,
 		BasicSprite: basicsprite,
 		BasicImage:  basicimage,
+		Font:        font,
 	}
 
 	if err := ebiten.RunGame(game); err != nil {
@@ -80,6 +87,7 @@ type Game struct {
 	Money       int
 	BasicSprite Sprite
 	BasicImage  *ebiten.Image
+	Font        font.Face
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
@@ -154,6 +162,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 	op.GeoM.Translate(float64(g.Cursor.Coords.X), float64(g.Cursor.Coords.Y))
 	screen.DrawImage(g.Cursor.Image, op)
+	txt := "hello"
+	text.Draw(screen, txt, g.Font, 5, 5, ColorDark)
 }
 
 // Cursor is used to interact with game entities at the given coordinates
@@ -270,4 +280,35 @@ func loadImage(name string) *ebiten.Image {
 	}
 
 	return ebiten.NewImageFromImage(raw)
+}
+
+// Load a TTF font from a file in  embedded FS into a font face
+func loadFont(name string) font.Face {
+	log.Printf("loading %s\n", name)
+
+	file, err := assets.Open(name)
+	if err != nil {
+		log.Fatalf("error opening file %s: %v\n", name, err)
+	}
+	defer file.Close()
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal("error reading font file: ", err)
+	}
+
+	fontdata, err := opentype.Parse(data)
+	if err != nil {
+		log.Fatal("error parsing font data: ", err)
+	}
+
+	fontface, err := opentype.NewFace(fontdata, &opentype.FaceOptions{
+		Size:    4,  // The actual height of the font
+		DPI:     72, // This is a default, it looks horrible with any other value
+		Hinting: font.HintingFull,
+	})
+	if err != nil {
+		log.Fatal("error creating font face: ", err)
+	}
+	return fontface
 }
