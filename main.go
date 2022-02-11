@@ -63,6 +63,7 @@ type Game struct {
 	Loading  bool
 	Size     image.Point
 	Cursor   *Cursor
+	Map      *ebiten.Image
 	Sprites  map[SpriteType]*SpriteSheet
 	Towers   Towers
 	Money    int
@@ -89,6 +90,8 @@ func NewGame(g *Game) {
 	g.Sprites[spriteTowerBasic] = loadSprite("basic-tower")
 	g.Sprites[spriteTowerStrong] = loadSprite("strong-tower")
 	g.Sprites[spriteBigMonsterHorizont] = loadSprite("big_monster_horizont")
+
+	g.Map = loadImage("assets/maps/map1.png")
 	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
 
 	g.Loading = false
@@ -169,9 +172,10 @@ func (g *Game) Update() error {
 
 // Draw draws the game screen by one frame
 func (g *Game) Draw(screen *ebiten.Image) {
-	// Light background
+	// Light background with map
 	op := &ebiten.DrawImageOptions{}
 	screen.Fill(ColorLight)
+	screen.DrawImage(g.Map, op)
 
 	if g.Loading {
 		// Try using text with pixel font
