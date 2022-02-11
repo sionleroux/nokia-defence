@@ -1,0 +1,99 @@
+{ "frames": [
+   {
+    "filename": "egyféle 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 1.aseprite",
+    "frame": { "x": 7, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 2.aseprite",
+    "frame": { "x": 14, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 3.aseprite",
+    "frame": { "x": 21, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 4.aseprite",
+    "frame": { "x": 28, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 5.aseprite",
+    "frame": { "x": 35, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 6.aseprite",
+    "frame": { "x": 42, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 7.aseprite",
+    "frame": { "x": 49, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 8.aseprite",
+    "frame": { "x": 56, "y": 0, "w": 7, "h": 6 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 25, "y": 9, "w": 7, "h": 6 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.32",
+  "image": "big_monster_horizont.png",
+  "format": "I8",
+  "size": { "w": 63, "h": 6 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 2", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

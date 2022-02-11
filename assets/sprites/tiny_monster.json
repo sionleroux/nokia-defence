@@ -1,0 +1,138 @@
+{ "frames": [
+   {
+    "filename": "egyféle 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 1.aseprite",
+    "frame": { "x": 7, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 2.aseprite",
+    "frame": { "x": 14, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 3.aseprite",
+    "frame": { "x": 21, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 4.aseprite",
+    "frame": { "x": 28, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 5.aseprite",
+    "frame": { "x": 35, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 6.aseprite",
+    "frame": { "x": 42, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 7.aseprite",
+    "frame": { "x": 49, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 8.aseprite",
+    "frame": { "x": 56, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 9.aseprite",
+    "frame": { "x": 63, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 10.aseprite",
+    "frame": { "x": 70, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 11.aseprite",
+    "frame": { "x": 77, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 12.aseprite",
+    "frame": { "x": 84, "y": 0, "w": 7, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 19, "w": 7, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.32",
+  "image": "tiny_monster.png",
+  "format": "I8",
+  "size": { "w": 91, "h": 8 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "horizontal_moving", "from": 0, "to": 4, "direction": "forward" },
+   { "name": "turn", "from": 5, "to": 7, "direction": "forward" },
+   { "name": "vertical_moving", "from": 8, "to": 12, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Layer 6", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

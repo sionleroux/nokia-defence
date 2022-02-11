@@ -1,0 +1,92 @@
+{ "frames": [
+   {
+    "filename": "egyféle 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 5, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 18, "y": 29, "w": 5, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 1.aseprite",
+    "frame": { "x": 5, "y": 0, "w": 5, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 18, "y": 29, "w": 5, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 2.aseprite",
+    "frame": { "x": 10, "y": 0, "w": 5, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 18, "y": 29, "w": 5, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 3.aseprite",
+    "frame": { "x": 15, "y": 0, "w": 5, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 18, "y": 29, "w": 5, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 4.aseprite",
+    "frame": { "x": 20, "y": 0, "w": 5, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 18, "y": 29, "w": 5, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 5.aseprite",
+    "frame": { "x": 25, "y": 0, "w": 5, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 18, "y": 29, "w": 5, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 6.aseprite",
+    "frame": { "x": 30, "y": 0, "w": 5, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 18, "y": 29, "w": 5, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   },
+   {
+    "filename": "egyféle 7.aseprite",
+    "frame": { "x": 35, "y": 0, "w": 5, "h": 8 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 18, "y": 29, "w": 5, "h": 8 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 250
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.32",
+  "image": "tower_up.png",
+  "format": "I8",
+  "size": { "w": 40, "h": 8 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "ground_to_sky", "from": 0, "to": 5, "direction": "forward" },
+   { "name": "shot", "from": 6, "to": 7, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Layer 3", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

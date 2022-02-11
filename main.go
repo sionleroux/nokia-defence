@@ -97,8 +97,8 @@ func NewGame(g *Game) {
 	// Sprites
 	g.BasicSprite = loadSprite("assets/sprites/basic-tower")
 	g.BasicImage = loadImage("assets/sprites/basic-tower.png")
-	g.MobSprite = loadSprite("assets/sprites/szorny_oldalaz")
-	g.MobImage = loadImage("assets/sprites/szorny_oldalaz.png")
+	g.MobSprite = loadSprite("assets/sprites/big_monster_horizont")
+	g.MobImage = loadImage("assets/sprites/big_monster_horizont.png")
 	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
 
 	g.Loading = false
