@@ -1,4 +1,4 @@
-// Copyright 2021 Siôn le Roux.  All rights reserved.
+// Copyright 2022 Siôn le Roux.  All rights reserved.
 // Use of this source code is subject to an MIT-style
 // licence which can be found in the LICENSE file.
 
