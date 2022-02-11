@@ -87,6 +87,7 @@ func NewGame(g *Game) {
 	// Sprites
 	g.Sprites = make(map[uint64]*SpriteSheet, 12)
 	g.Sprites[spriteTowerBasic] = loadSprite("basic-tower")
+	g.Sprites[spriteTowerStrong] = loadSprite("strong-tower")
 	g.Sprites[spriteBigMonsterHorizont] = loadSprite("big_monster_horizont")
 	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
 
@@ -145,7 +146,7 @@ func (g *Game) Update() error {
 
 	// Tower placement controls
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
-		t := NewBasicTower(g.Cursor.Coords)
+		t := NewBasicTower(g)
 		moneydiff := g.Money - t.Cost
 		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
 		if moneydiff >= 0 {
@@ -154,7 +155,7 @@ func (g *Game) Update() error {
 		}
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyZ) {
-		t := NewStrongTower(g.Cursor.Coords)
+		t := NewStrongTower(g)
 		moneydiff := g.Money - t.Cost
 		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
 		if moneydiff >= 0 {

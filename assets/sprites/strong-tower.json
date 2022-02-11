@@ -88,22 +88,13 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 5, "h": 5 },
     "sourceSize": { "w": 5, "h": 5 },
     "duration": 100
-   },
-   {
-    "filename": "strong-tower 10.aseprite",
-    "frame": { "x": 50, "y": 0, "w": 5, "h": 5 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 5, "h": 5 },
-    "sourceSize": { "w": 5, "h": 5 },
-    "duration": 100
    }
  ],
  "meta": {
   "app": "http://www.aseprite.org/",
   "version": "1.2.32-dev",
   "format": "I8",
-  "size": { "w": 55, "h": 5 },
+  "size": { "w": 50, "h": 5 },
   "scale": "1"
  }
 }
