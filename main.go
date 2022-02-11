@@ -51,7 +51,7 @@ func main() {
 	ebiten.SetWindowTitle("Nokia Defence")
 
 	// Fonts
-	font := loadFont("assets/fonts/tiny.ttf")
+	font := loadFont("assets/fonts/tiny.ttf", 6)
 
 	game := &Game{
 		Loading: true,
@@ -334,7 +334,7 @@ func loadImage(name string) *ebiten.Image {
 }
 
 // Load a TTF font from a file in  embedded FS into a font face
-func loadFont(name string) font.Face {
+func loadFont(name string, size float64) font.Face {
 	log.Printf("loading %s\n", name)
 
 	file, err := assets.Open(name)
@@ -354,8 +354,8 @@ func loadFont(name string) font.Face {
 	}
 
 	fontface, err := opentype.NewFace(fontdata, &opentype.FaceOptions{
-		Size:    6,  // The actual height of the font
-		DPI:     72, // This is a default, it looks horrible with any other value
+		Size:    size, // The actual height of the font
+		DPI:     72,   // This is a default, it looks horrible with any other value
 		Hinting: font.HintingFull,
 	})
 	if err != nil {
