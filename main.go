@@ -61,6 +61,8 @@ func main() {
 	// Sprites
 	basicsprite := loadSprite("assets/basic-tower")
 	basicimage := loadImage("assets/basic-tower.png")
+	mobsprite := loadSprite("assets/szorny_oldalaz")
+	mobimage := loadImage("assets/szorny_oldalaz.png")
 
 	// Fonts
 	font := loadFont("assets/tinier.ttf")
@@ -71,6 +73,8 @@ func main() {
 		Money:       StartingMoney,
 		BasicSprite: basicsprite,
 		BasicImage:  basicimage,
+		MobSprite:   mobsprite,
+		MobImage:    mobimage,
 		Font:        font,
 	}
 
@@ -87,6 +91,10 @@ type Game struct {
 	Money       int
 	BasicSprite Sprite
 	BasicImage  *ebiten.Image
+	MobSprite   Sprite
+	MobImage    *ebiten.Image
+	MobFrame    int
+	Count       int
 	Font        font.Face
 }
 
@@ -130,6 +138,11 @@ func (g *Game) Update() error {
 		t.Update(g)
 	}
 
+	if g.Count%10 == 0 {
+		g.MobFrame = (g.MobFrame + 1) % len(g.MobSprite)
+	}
+	g.Count++
+
 	// Tower placement controls
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
 		t := NewBasicTower(g.Cursor.Coords)
@@ -162,6 +175,17 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 	op.GeoM.Translate(float64(g.Cursor.Coords.X), float64(g.Cursor.Coords.Y))
 	screen.DrawImage(g.Cursor.Image, op)
+	// Try drawing a moving monster sprite
+	op.GeoM.Reset()
+	op.GeoM.Translate(float64(20+g.Count/10), 20)
+	frame := g.MobSprite[g.MobFrame]
+	screen.DrawImage(g.MobImage.SubImage(image.Rect(
+		frame.Position.X,
+		frame.Position.Y,
+		frame.Position.X+frame.Position.W,
+		frame.Position.Y+frame.Position.H,
+	)).(*ebiten.Image), op)
+	// Try using text with pixel font
 	txt := "hello"
 	text.Draw(screen, txt, g.Font, 5, 5, ColorDark)
 }
