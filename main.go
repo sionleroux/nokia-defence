@@ -63,7 +63,7 @@ type Game struct {
 	Loading  bool
 	Size     image.Point
 	Cursor   *Cursor
-	Sprites  map[uint64]*SpriteSheet
+	Sprites  map[SpriteType]*SpriteSheet
 	Towers   Towers
 	Money    int
 	MobFrame int
@@ -85,7 +85,7 @@ func NewGame(g *Game) {
 	musicPlayer.Play()
 
 	// Sprites
-	g.Sprites = make(map[uint64]*SpriteSheet, 12)
+	g.Sprites = make(map[SpriteType]*SpriteSheet, 12)
 	g.Sprites[spriteTowerBasic] = loadSprite("basic-tower")
 	g.Sprites[spriteTowerStrong] = loadSprite("strong-tower")
 	g.Sprites[spriteBigMonsterHorizont] = loadSprite("big_monster_horizont")

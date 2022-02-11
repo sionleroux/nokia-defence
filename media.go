@@ -67,8 +67,11 @@ type SpriteSheet struct {
 	Image  *ebiten.Image
 }
 
+// SpriteType is a unique identifier to load a sprite by name
+type SpriteType uint64
+
 const (
-	spriteBigMonster uint64 = iota
+	spriteBigMonster SpriteType = iota
 	spriteTowerBasic
 	spriteTowerStrong
 	spriteBigMonsterHorizont
