@@ -148,7 +148,7 @@ func (g *Game) Update() error {
 // Draw draws the game screen by one frame
 func (g *Game) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
-	screen.Fill(ColorDark)
+	screen.Fill(ColorLight)
 	for _, t := range g.Towers {
 		t.Draw(g, screen)
 	}
