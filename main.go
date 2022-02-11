@@ -50,7 +50,7 @@ func main() {
 
 	// Music
 	const sampleRate int = 44100 // assuming "normal" sample rate
-	music := loadSoundFile("assets/construction.ogg", sampleRate)
+	music := loadSoundFile("assets/music/construction.ogg", sampleRate)
 	musicLoop := audio.NewInfiniteLoop(music, music.Length())
 	musicPlayer, err := audio.NewPlayer(audio.NewContext(sampleRate), musicLoop)
 	if err != nil {
@@ -59,13 +59,13 @@ func main() {
 	musicPlayer.Play()
 
 	// Sprites
-	basicsprite := loadSprite("assets/basic-tower")
-	basicimage := loadImage("assets/basic-tower.png")
-	mobsprite := loadSprite("assets/szorny_oldalaz")
-	mobimage := loadImage("assets/szorny_oldalaz.png")
+	basicsprite := loadSprite("assets/sprites/basic-tower")
+	basicimage := loadImage("assets/sprites/basic-tower.png")
+	mobsprite := loadSprite("assets/sprites/szorny_oldalaz")
+	mobimage := loadImage("assets/sprites/szorny_oldalaz.png")
 
 	// Fonts
-	font := loadFont("assets/tinier.ttf")
+	font := loadFont("assets/fonts/tinier.ttf")
 
 	game := &Game{
 		Size:        GameSize,
