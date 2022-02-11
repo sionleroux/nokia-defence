@@ -223,9 +223,9 @@ func NewCursor(coords image.Point) *Cursor {
 		NokiaPalette,
 	)
 	i.Pix = []uint8{
-		0, 2, 0,
-		2, 0, 2,
-		0, 2, 0,
+		0, 1, 0,
+		1, 0, 1,
+		0, 1, 0,
 	}
 
 	return &Cursor{
