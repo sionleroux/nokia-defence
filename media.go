@@ -10,6 +10,7 @@ import (
 	"image/png"
 	"io/ioutil"
 	"log"
+	"path"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
@@ -63,10 +64,27 @@ type Sprite []Frame
 // about them
 type SpriteSheet struct {
 	Sprite Sprite `json:"frames"`
+	Image  *ebiten.Image
 }
 
+const (
+	spriteBigMonster uint64 = iota
+	spriteTowerBasic
+	spriteTowerStrong
+	spriteBigMonsterHorizont
+	spriteBigMonsterVertical
+	spriteBumm
+	spriteSmallMonster
+	spriteTinyMonster
+	spriteTowerBottom
+	spriteTowerLeft
+	spriteTowerRight
+	spriteTowerUp
+)
+
 // Load an OGG Vorbis sound file with 44100 sample rate and return its stream
-func loadSprite(name string) Sprite {
+func loadSprite(name string) *SpriteSheet {
+	name = path.Join("assets", "sprites", name)
 	log.Printf("loading %s\n", name)
 
 	file, err := assets.Open(name + ".json")
@@ -86,7 +104,9 @@ func loadSprite(name string) Sprite {
 		log.Fatal(err)
 	}
 
-	return ss.Sprite
+	ss.Image = loadImage(name + ".png")
+
+	return &ss
 }
 
 // Load an image from embedded FS into an ebiten Image object

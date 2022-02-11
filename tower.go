@@ -53,7 +53,7 @@ func NewStrongTower(coords image.Point) *Tower {
 
 // Update handles game logic for towers
 func (t *Tower) Update(g *Game) {
-	if t.Frame < len(g.BasicSprite)-1 {
+	if t.Frame < len(g.Sprites[spriteTowerBasic].Sprite)-1 {
 		t.Frame++
 	}
 }
@@ -62,8 +62,8 @@ func (t *Tower) Update(g *Game) {
 func (t *Tower) Draw(g *Game, screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(t.Coords.X-1), float64(t.Coords.Y-1))
-	frame := g.BasicSprite[t.Frame]
-	screen.DrawImage(g.BasicImage.SubImage(image.Rect(
+	frame := g.Sprites[spriteTowerBasic].Sprite[t.Frame]
+	screen.DrawImage(g.Sprites[spriteTowerBasic].Image.SubImage(image.Rect(
 		frame.Position.X,
 		frame.Position.Y,
 		frame.Position.X+frame.Position.W,

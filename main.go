@@ -60,18 +60,15 @@ func main() {
 
 // Game represents the main game state
 type Game struct {
-	Loading     bool
-	Size        image.Point
-	Cursor      *Cursor
-	Towers      Towers
-	Money       int
-	BasicSprite Sprite
-	BasicImage  *ebiten.Image
-	MobSprite   Sprite
-	MobImage    *ebiten.Image
-	MobFrame    int
-	Count       int
-	Font        font.Face
+	Loading  bool
+	Size     image.Point
+	Cursor   *Cursor
+	Sprites  map[uint64]*SpriteSheet
+	Towers   Towers
+	Money    int
+	MobFrame int
+	Count    int
+	Font     font.Face
 }
 
 // NewGame sets up a new game object with default states and game objects
@@ -88,10 +85,9 @@ func NewGame(g *Game) {
 	musicPlayer.Play()
 
 	// Sprites
-	g.BasicSprite = loadSprite("assets/sprites/basic-tower")
-	g.BasicImage = loadImage("assets/sprites/basic-tower.png")
-	g.MobSprite = loadSprite("assets/sprites/big_monster_horizont")
-	g.MobImage = loadImage("assets/sprites/big_monster_horizont.png")
+	g.Sprites = make(map[uint64]*SpriteSheet, 12)
+	g.Sprites[spriteTowerBasic] = loadSprite("basic-tower")
+	g.Sprites[spriteBigMonsterHorizont] = loadSprite("big_monster_horizont")
 	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
 
 	g.Loading = false
@@ -143,7 +139,7 @@ func (g *Game) Update() error {
 	}
 
 	if g.Count%10 == 0 {
-		g.MobFrame = (g.MobFrame + 1) % len(g.MobSprite)
+		g.MobFrame = (g.MobFrame + 1) % len(g.Sprites[spriteBigMonsterHorizont].Sprite)
 	}
 	g.Count++
 
@@ -199,8 +195,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// Try drawing a moving monster sprite
 	op.GeoM.Reset()
 	op.GeoM.Translate(float64(20+g.Count/10), 20)
-	frame := g.MobSprite[g.MobFrame]
-	screen.DrawImage(g.MobImage.SubImage(image.Rect(
+	mob := g.Sprites[spriteBigMonsterHorizont]
+	frame := mob.Sprite[g.MobFrame]
+	screen.DrawImage(mob.Image.SubImage(image.Rect(
 		frame.Position.X,
 		frame.Position.Y,
 		frame.Position.X+frame.Position.W,
