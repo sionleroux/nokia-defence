@@ -38,11 +38,15 @@ func loadSoundFile(name string, sampleRate int) *vorbis.Stream {
 	return music
 }
 
+// Frame is a single frame of an animation, usually a sub-image of a larger
+// image containing several frames
 type Frame struct {
 	Duration int           `json:"duration"`
 	Position FramePosition `json:"frame"`
 }
 
+// FramePosition represents the position of a frame, including the top-left
+// coordinates and its dimensions (width and height)
 type FramePosition struct {
 	X int `json:"x"`
 	Y int `json:"y"`
@@ -50,8 +54,13 @@ type FramePosition struct {
 	H int `json:"h"`
 }
 
+// Sprite is a slice of frames used to create sprite animation, it would've been
+// nice to be able to call this "Frames" but that would cause confusion with the
+// "frames" field in the JSON file
 type Sprite []Frame
 
+// SpriteSheet is the root-node of sprite data, it contains frames and meta data
+// about them
 type SpriteSheet struct {
 	Sprite Sprite `json:"frames"`
 }
