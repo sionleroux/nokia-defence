@@ -48,35 +48,17 @@ func main() {
 	ebiten.SetWindowSize(GameSize.X*windowScale, GameSize.Y*windowScale)
 	ebiten.SetWindowTitle("Nokia Defence")
 
-	// Music
-	const sampleRate int = 44100 // assuming "normal" sample rate
-	music := loadSoundFile("assets/music/construction.ogg", sampleRate)
-	musicLoop := audio.NewInfiniteLoop(music, music.Length())
-	musicPlayer, err := audio.NewPlayer(audio.NewContext(sampleRate), musicLoop)
-	if err != nil {
-		log.Fatalf("error making music player: %v\n", err)
-	}
-	musicPlayer.Play()
-
-	// Sprites
-	basicsprite := loadSprite("assets/sprites/basic-tower")
-	basicimage := loadImage("assets/sprites/basic-tower.png")
-	mobsprite := loadSprite("assets/sprites/szorny_oldalaz")
-	mobimage := loadImage("assets/sprites/szorny_oldalaz.png")
-
 	// Fonts
 	font := loadFont("assets/fonts/tinier.ttf")
 
 	game := &Game{
-		Size:        GameSize,
-		Cursor:      NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2)),
-		Money:       StartingMoney,
-		BasicSprite: basicsprite,
-		BasicImage:  basicimage,
-		MobSprite:   mobsprite,
-		MobImage:    mobimage,
-		Font:        font,
+		Loading: true,
+		Size:    GameSize,
+		Money:   StartingMoney,
+		Font:    font,
 	}
+
+	go NewGame(game)
 
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
@@ -85,6 +67,7 @@ func main() {
 
 // Game represents the main game state
 type Game struct {
+	Loading     bool
 	Size        image.Point
 	Cursor      *Cursor
 	Towers      Towers
@@ -96,6 +79,29 @@ type Game struct {
 	MobFrame    int
 	Count       int
 	Font        font.Face
+}
+
+// NewGame sets up a new game object with default states and game objects
+func NewGame(g *Game) {
+
+	// Music
+	const sampleRate int = 44100 // assuming "normal" sample rate
+	music := loadSoundFile("assets/music/construction.ogg", sampleRate)
+	musicLoop := audio.NewInfiniteLoop(music, music.Length())
+	musicPlayer, err := audio.NewPlayer(audio.NewContext(sampleRate), musicLoop)
+	if err != nil {
+		log.Fatalf("error making music player: %v\n", err)
+	}
+	musicPlayer.Play()
+
+	// Sprites
+	g.BasicSprite = loadSprite("assets/sprites/basic-tower")
+	g.BasicImage = loadImage("assets/sprites/basic-tower.png")
+	g.MobSprite = loadSprite("assets/sprites/szorny_oldalaz")
+	g.MobImage = loadImage("assets/sprites/szorny_oldalaz.png")
+	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
+
+	g.Loading = false
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
@@ -118,6 +124,11 @@ func (g *Game) Update() error {
 		} else {
 			ebiten.SetFullscreen(true)
 		}
+	}
+
+	// Skip updating while the game is loading
+	if g.Loading {
+		return nil
 	}
 
 	// Movement controls
@@ -168,8 +179,20 @@ func (g *Game) Update() error {
 
 // Draw draws the game screen by one frame
 func (g *Game) Draw(screen *ebiten.Image) {
+	// Light background
 	op := &ebiten.DrawImageOptions{}
 	screen.Fill(ColorLight)
+
+	if g.Loading {
+		// Try using text with pixel font
+		txt := "Loading..."
+		txtf, _ := font.BoundString(g.Font, txt)
+		txth := (txtf.Max.Y - txtf.Min.Y).Ceil() / 2
+		txtw := (txtf.Max.X - txtf.Min.X).Ceil() / 2
+		text.Draw(screen, txt, g.Font, g.Size.X/2-txtw, g.Size.Y/2-txth, ColorDark)
+		return
+	}
+
 	for _, t := range g.Towers {
 		t.Draw(g, screen)
 	}
@@ -185,9 +208,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		frame.Position.X+frame.Position.W,
 		frame.Position.Y+frame.Position.H,
 	)).(*ebiten.Image), op)
-	// Try using text with pixel font
-	txt := "hello"
-	text.Draw(screen, txt, g.Font, 5, 5, ColorDark)
 }
 
 // Cursor is used to interact with game entities at the given coordinates
