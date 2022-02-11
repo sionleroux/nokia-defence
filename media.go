@@ -82,7 +82,8 @@ const (
 	spriteTowerUp
 )
 
-// Load an OGG Vorbis sound file with 44100 sample rate and return its stream
+// Load a sprite image and associated meta-data given a file name (without
+// extension)
 func loadSprite(name string) *SpriteSheet {
 	name = path.Join("assets", "sprites", name)
 	log.Printf("loading %s\n", name)
