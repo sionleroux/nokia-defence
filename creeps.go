@@ -17,11 +17,17 @@ type Creep struct {
 	NextWaypoint int
 	Damage       int
 	Frame        int
+	LastMoved    int
 	Sprite       *SpriteSheet
 }
 
 // Update handles game logic for a Creep
 func (c *Creep) Update(g *Game) {
+	c.LastMoved = (c.LastMoved + 1) % 10
+	if c.LastMoved != 0 {
+		return
+	}
+
 	targetSquare := g.MapData[c.NextWaypoint]
 	targertCoords := image.Pt(targetSquare.X*7+4, targetSquare.Y*7+4+5)
 	if targertCoords.X > c.Coords.X {
