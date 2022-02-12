@@ -89,6 +89,45 @@ type SpriteSheet struct {
 	Image  *ebiten.Image
 }
 
+// Waypoint is a point marking a change of direction in the way along the map
+type Waypoint struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+}
+
+// Ways is a slice of waypoints from spawn point to the base
+type Ways []*Waypoint
+
+// MapData is waypoint data for a level map
+type MapData struct {
+	Ways Ways `json:"points"`
+}
+
+// Load map waypoint data from a given JSON file
+func loadWays(name string) Ways {
+	name = path.Join("assets", "maps", name)
+	log.Printf("loading %s\n", name)
+
+	file, err := assets.Open(name + ".json")
+	if err != nil {
+		log.Fatalf("error opening file %s: %v\n", name, err)
+	}
+	defer file.Close()
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var mapdata MapData
+	json.Unmarshal(data, &mapdata)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return mapdata.Ways
+}
+
 // SoundType is a unique identifier to reference sound by name
 type SoundType uint64
 

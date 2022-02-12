@@ -65,6 +65,7 @@ type Game struct {
 	Size     image.Point
 	Cursor   *Cursor
 	Maps     []*ebiten.Image
+	MapData  Ways
 	Sounds   []*vorbis.Stream
 	Mplayer  []*vorbis.Stream
 	Mcontext *audio.Context
@@ -117,6 +118,9 @@ func NewGame(g *Game) {
 	g.Maps[0] = loadImage("assets/maps/map1.png")
 	g.Maps[1] = loadImage("assets/maps/map2.png")
 	g.Maps[2] = loadImage("assets/maps/map3.png")
+	g.MapData = loadWays("map1")
+	log.Println("got spawn point:", g.MapData[0])
+
 	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
 
 	g.Loading = false
