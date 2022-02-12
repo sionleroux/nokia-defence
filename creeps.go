@@ -26,7 +26,7 @@ func (c *Creep) Update(g *Game) {
 // Draw draws the Creep to the screen
 func (c *Creep) Draw(g *Game, screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(float64(c.Coords.X-1), float64(c.Coords.Y-1))
+	op.GeoM.Translate(float64(c.Coords.X-2), float64(c.Coords.Y-2))
 	s := c.Sprite
 	frame := s.Sprite[c.Frame]
 	screen.DrawImage(s.Image.SubImage(image.Rect(

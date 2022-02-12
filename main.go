@@ -120,7 +120,6 @@ func NewGame(g *Game) {
 	g.Maps[1] = loadImage("assets/maps/map2.png")
 	g.Maps[2] = loadImage("assets/maps/map3.png")
 	g.MapData = loadWays("map1")
-	log.Println("got spawn point:", g.MapData[0])
 
 	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
 
@@ -198,8 +197,15 @@ func (g *Game) Update() error {
 	}
 
 	if len(g.Creeps) < 1 {
+		spawn := g.MapData[0]
+		gridScale := 7
+		hudMargin := 5
+		gridSquareMid := 4
 		g.Creeps = append(g.Creeps, &Creep{
-			Coords: image.Pt(10, 10),
+			Coords: image.Pt(
+				spawn.X*gridScale+gridSquareMid,
+				spawn.Y*gridScale+hudMargin+gridSquareMid,
+			),
 			Damage: 0,
 			Frame:  0,
 			Sprite: g.Sprites[spriteSmallMonster],
