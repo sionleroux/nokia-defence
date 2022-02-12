@@ -13,6 +13,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -63,7 +64,12 @@ type Game struct {
 	Loading  bool
 	Size     image.Point
 	Cursor   *Cursor
-	Map      *ebiten.Image
+	Maps     []*ebiten.Image
+	Sounds   []*vorbis.Stream
+	Mplayer  []*vorbis.Stream
+	Mcontext *audio.Context
+	Music    *audio.Player
+	MapIndex int
 	Sprites  map[SpriteType]*SpriteSheet
 	Towers   Towers
 	Money    int
@@ -77,21 +83,40 @@ func NewGame(g *Game) {
 
 	// Music
 	const sampleRate int = 44100 // assuming "normal" sample rate
-	music := loadSoundFile("assets/music/construction.ogg", sampleRate)
-	musicLoop := audio.NewInfiniteLoop(music, music.Length())
-	musicPlayer, err := audio.NewPlayer(audio.NewContext(sampleRate), musicLoop)
-	if err != nil {
-		log.Fatalf("error making music player: %v\n", err)
-	}
-	musicPlayer.Play()
+	g.Mcontext = audio.NewContext(sampleRate)
+	g.Sounds = make([]*vorbis.Stream, 4)
+	g.Sounds[soundMusicConstruction] = loadSoundFile("assets/music/construction.ogg", sampleRate)
+	g.Sounds[soundMusicTitle] = loadSoundFile("assets/music/title.ogg", sampleRate)
+	g.Sounds[soundVictorious] = loadSoundFile("assets/sfx/victorious.ogg", sampleRate)
+	g.Sounds[soundFail] = loadSoundFile("assets/sfx/fail.ogg", sampleRate)
+	music := NewMusicPlayer(g.Sounds[soundMusicConstruction], g.Mcontext)
+	music.Play()
+	g.Music = music
 
 	// Sprites
 	g.Sprites = make(map[SpriteType]*SpriteSheet, 12)
 	g.Sprites[spriteTowerBasic] = loadSprite("basic-tower")
 	g.Sprites[spriteTowerStrong] = loadSprite("strong-tower")
 	g.Sprites[spriteBigMonsterHorizont] = loadSprite("big_monster_horizont")
+	g.Sprites[spriteBigMonsterVertical] = loadSprite("big_monster_vertical")
+	g.Sprites[spriteSmallMonster] = loadSprite("small_monster")
+	g.Sprites[spriteTinyMonster] = loadSprite("tiny_monster")
+	g.Sprites[spriteBumm] = loadSprite("bumm")
+	g.Sprites[spriteTowerBottom] = loadSprite("tower_bottom")
+	g.Sprites[spriteTowerLeft] = loadSprite("tower_left")
+	g.Sprites[spriteTowerRight] = loadSprite("tower_right")
+	g.Sprites[spriteTowerUp] = loadSprite("tower_up")
+	g.Sprites[spriteHeartGone] = loadSprite("heart_gone")
+	g.Sprites[spriteIconHeart] = loadSprite("heart_icon")
+	g.Sprites[spriteIconMoney] = loadSprite("money_icon")
+	g.Sprites[spriteIconTime] = loadSprite("time_icon")
+	g.Sprites[spriteTitleScreen] = loadSprite("titlescreen")
 
-	g.Map = loadImage("assets/maps/map1.png")
+	// Static images
+	g.Maps = make([]*ebiten.Image, 3)
+	g.Maps[0] = loadImage("assets/maps/map1.png")
+	g.Maps[1] = loadImage("assets/maps/map2.png")
+	g.Maps[2] = loadImage("assets/maps/map3.png")
 	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
 
 	g.Loading = false
@@ -175,7 +200,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// Light background with map
 	op := &ebiten.DrawImageOptions{}
 	screen.Fill(ColorLight)
-	screen.DrawImage(g.Map, op)
+	screen.DrawImage(g.Maps[g.MapIndex], op)
 
 	if g.Loading {
 		// Try using text with pixel font

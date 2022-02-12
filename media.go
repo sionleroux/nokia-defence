@@ -13,6 +13,7 @@ import (
 	"path"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
@@ -20,6 +21,27 @@ import (
 
 //go:embed assets/*
 var assets embed.FS
+
+// NewMusicPlayer loads a sound into an audio player that can be used to play it
+// as an infinite loop of music without any additional setup required
+func NewMusicPlayer(music *vorbis.Stream, context *audio.Context) *audio.Player {
+	musicLoop := audio.NewInfiniteLoop(music, music.Length())
+	musicPlayer, err := audio.NewPlayer(context, musicLoop)
+	if err != nil {
+		log.Fatalf("error making music player: %v\n", err)
+	}
+	return musicPlayer
+}
+
+// NewSoundPlayer loads a sound into an audio player that can be used to play it
+// without any additional setup required
+func NewSoundPlayer(audioFile *vorbis.Stream, context *audio.Context) *audio.Player {
+	audioPlayer, err := audio.NewPlayer(context, audioFile)
+	if err != nil {
+		log.Fatalf("error making audio player: %v\n", err)
+	}
+	return audioPlayer
+}
 
 // Load an OGG Vorbis sound file with 44100 sample rate and return its stream
 func loadSoundFile(name string, sampleRate int) *vorbis.Stream {
@@ -67,6 +89,16 @@ type SpriteSheet struct {
 	Image  *ebiten.Image
 }
 
+// SoundType is a unique identifier to reference sound by name
+type SoundType uint64
+
+const (
+	soundMusicTitle SoundType = iota
+	soundMusicConstruction
+	soundVictorious
+	soundFail
+)
+
 // SpriteType is a unique identifier to load a sprite by name
 type SpriteType uint64
 
@@ -83,6 +115,11 @@ const (
 	spriteTowerLeft
 	spriteTowerRight
 	spriteTowerUp
+	spriteHeartGone
+	spriteIconHeart
+	spriteIconMoney
+	spriteIconTime
+	spriteTitleScreen
 )
 
 // Load a sprite image and associated meta-data given a file name (without
