@@ -1,0 +1,81 @@
+{ "frames": [
+   {
+    "filename": "palya3 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 5, "h": 4 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 17, "y": 1, "w": 5, "h": 4 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 300
+   },
+   {
+    "filename": "palya3 1.aseprite",
+    "frame": { "x": 5, "y": 0, "w": 5, "h": 4 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 17, "y": 1, "w": 5, "h": 4 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 300
+   },
+   {
+    "filename": "palya3 2.aseprite",
+    "frame": { "x": 10, "y": 0, "w": 5, "h": 4 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 17, "y": 1, "w": 5, "h": 4 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 300
+   },
+   {
+    "filename": "palya3 3.aseprite",
+    "frame": { "x": 15, "y": 0, "w": 5, "h": 4 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 17, "y": 1, "w": 5, "h": 4 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 100
+   },
+   {
+    "filename": "palya3 4.aseprite",
+    "frame": { "x": 20, "y": 0, "w": 5, "h": 4 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 17, "y": 1, "w": 5, "h": 4 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 100
+   },
+   {
+    "filename": "palya3 5.aseprite",
+    "frame": { "x": 25, "y": 0, "w": 5, "h": 4 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 17, "y": 1, "w": 5, "h": 4 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 100
+   },
+   {
+    "filename": "palya3 6.aseprite",
+    "frame": { "x": 30, "y": 0, "w": 5, "h": 4 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 17, "y": 1, "w": 5, "h": 4 },
+    "sourceSize": { "w": 84, "h": 48 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.32",
+  "image": "heart_gone.png",
+  "format": "I8",
+  "size": { "w": 35, "h": 4 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "heart_gone", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}
