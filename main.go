@@ -73,6 +73,7 @@ type Game struct {
 	MapIndex int
 	Sprites  map[SpriteType]*SpriteSheet
 	Towers   Towers
+	Creeps   Creeps
 	Money    int
 	MobFrame int
 	Count    int
@@ -196,6 +197,15 @@ func (g *Game) Update() error {
 		}
 	}
 
+	if len(g.Creeps) < 1 {
+		g.Creeps = append(g.Creeps, &Creep{
+			Coords: image.Pt(10, 10),
+			Damage: 0,
+			Frame:  0,
+			Sprite: g.Sprites[spriteSmallMonster],
+		})
+	}
+
 	return nil
 }
 
@@ -224,6 +234,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, t := range g.Towers {
 		t.Draw(g, screen)
 	}
+
+	for _, c := range g.Creeps {
+		c.Draw(g, screen)
+	}
+
 	op.GeoM.Translate(float64(g.Cursor.Coords.X), float64(g.Cursor.Coords.Y))
 	screen.DrawImage(g.Cursor.Image, op)
 	// Try drawing a moving monster sprite
