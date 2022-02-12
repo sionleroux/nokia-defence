@@ -171,6 +171,10 @@ func (g *Game) Update() error {
 		t.Update(g)
 	}
 
+	for _, c := range g.Creeps {
+		c.Update(g)
+	}
+
 	if g.Count%10 == 0 {
 		g.MobFrame = (g.MobFrame + 1) % len(g.Sprites[spriteBigMonsterHorizont].Sprite)
 	}
@@ -206,9 +210,10 @@ func (g *Game) Update() error {
 				spawn.X*gridScale+gridSquareMid,
 				spawn.Y*gridScale+hudMargin+gridSquareMid,
 			),
-			Damage: 0,
-			Frame:  0,
-			Sprite: g.Sprites[spriteSmallMonster],
+			NextWaypoint: 1,
+			Damage:       0,
+			Frame:        0,
+			Sprite:       g.Sprites[spriteSmallMonster],
 		})
 	}
 

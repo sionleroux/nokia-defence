@@ -6,27 +6,50 @@ package main
 
 import (
 	"image"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 // Creep moves along a path from a spawn point towards the base it is attacking
 type Creep struct {
-	Coords image.Point
-	Damage int
-	Frame  int
-	Sprite *SpriteSheet
+	Coords       image.Point
+	NextWaypoint int
+	Damage       int
+	Frame        int
+	Sprite       *SpriteSheet
 }
 
 // Update handles game logic for a Creep
 func (c *Creep) Update(g *Game) {
-	panic("not implemented") // TODO: Implement
+	targetSquare := g.MapData[c.NextWaypoint]
+	targertCoords := image.Pt(targetSquare.X*7+4, targetSquare.Y*7+4+5)
+	if targertCoords.X > c.Coords.X {
+		c.Coords.X++
+	}
+	if targertCoords.X < c.Coords.X {
+		c.Coords.X--
+	}
+	if targertCoords.Y > c.Coords.Y {
+		c.Coords.Y++
+	}
+	if targertCoords.Y < c.Coords.Y {
+		c.Coords.Y--
+	}
+	if targertCoords.X == c.Coords.X && targertCoords.Y == c.Coords.Y {
+		next := c.NextWaypoint + 1
+		if next == len(g.MapData) {
+			log.Fatal("You failed")
+		} else {
+			c.NextWaypoint++
+		}
+	}
 }
 
 // Draw draws the Creep to the screen
 func (c *Creep) Draw(g *Game, screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(float64(c.Coords.X-2), float64(c.Coords.Y-2))
+	op.GeoM.Translate(float64(c.Coords.X-3), float64(c.Coords.Y-3))
 	s := c.Sprite
 	frame := s.Sprite[c.Frame]
 	screen.DrawImage(s.Image.SubImage(image.Rect(
