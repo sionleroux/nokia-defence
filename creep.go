@@ -80,8 +80,14 @@ func (c *Creep) animate() {
 }
 
 func (c *Creep) navigateWaypoints(g *Game) {
+	tileSize := 7
+	hudOffset := 5
+	tileCenter := 4
 	targetSquare := g.MapData[c.NextWaypoint]
-	targertCoords := image.Pt(targetSquare.X*7+4, targetSquare.Y*7+4+5)
+	targertCoords := image.Pt(
+		targetSquare.X*tileSize+tileCenter,
+		targetSquare.Y*tileSize+tileCenter+hudOffset,
+	)
 	if targertCoords.X > c.Coords.X {
 		c.Coords.X++
 		c.Direction = directionRight
