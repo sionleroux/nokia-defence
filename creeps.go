@@ -35,6 +35,8 @@ func (c *Creep) Update(g *Game) error {
 	}
 
 	c.navigateWaypoints(g)
+
+	c.Frame = (c.Frame + 1) % (c.Sprite.Meta.FrameTags[0].To + 1)
 	return nil
 }
 
