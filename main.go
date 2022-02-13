@@ -172,8 +172,11 @@ func (g *Game) Update() error {
 		t.Update(g)
 	}
 
-	for _, c := range g.Creeps {
-		c.Update(g)
+	for i, c := range g.Creeps {
+		if err := c.Update(g); err != nil {
+			log.Println(err)
+			g.Creeps = append(g.Creeps[:i], g.Creeps[i+1:]...)
+		}
 	}
 
 	if g.Count%10 == 0 {
@@ -213,6 +216,7 @@ func (g *Game) Update() error {
 			),
 			NextWaypoint: 1,
 			Damage:       0,
+			Health:       1000,
 			Frame:        0,
 			Sprite:       g.Sprites[spriteSmallMonster],
 		})
@@ -303,6 +307,6 @@ func (c *Cursor) Move(dest image.Point) {
 // Entity is anything that can be interacted with in the game and drawn  to the
 // screen, like Towers and Creeps
 type Entity interface {
-	Update(g *Game)
+	Update(g *Game) error
 	Draw(g *Game, screen *ebiten.Image)
 }

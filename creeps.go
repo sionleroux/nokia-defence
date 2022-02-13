@@ -5,6 +5,7 @@
 package main
 
 import (
+	"errors"
 	"image"
 	"log"
 
@@ -15,19 +16,29 @@ import (
 type Creep struct {
 	Coords       image.Point
 	NextWaypoint int
-	Damage       int
+	Health       int // Hit points
+	Damage       int // How much damage it deals to the base
 	Frame        int
 	LastMoved    int
 	Sprite       *SpriteSheet
 }
 
 // Update handles game logic for a Creep
-func (c *Creep) Update(g *Game) {
-	c.LastMoved = (c.LastMoved + 1) % 10
-	if c.LastMoved != 0 {
-		return
+func (c *Creep) Update(g *Game) error {
+	if c.Health <= 0 {
+		return errors.New("Creep died")
 	}
 
+	c.LastMoved = (c.LastMoved + 1) % 10
+	if c.LastMoved != 0 {
+		return nil
+	}
+
+	c.navigateWaypoints(g)
+	return nil
+}
+
+func (c *Creep) navigateWaypoints(g *Game) {
 	targetSquare := g.MapData[c.NextWaypoint]
 	targertCoords := image.Pt(targetSquare.X*7+4, targetSquare.Y*7+4+5)
 	if targertCoords.X > c.Coords.X {
@@ -44,12 +55,21 @@ func (c *Creep) Update(g *Game) {
 	}
 	if targertCoords.X == c.Coords.X && targertCoords.Y == c.Coords.Y {
 		next := c.NextWaypoint + 1
-		if next == len(g.MapData) {
-			log.Fatal("You failed")
-		} else {
+		if next < len(g.MapData) {
 			c.NextWaypoint++
+		} else {
+			log.Fatal("You failed")
 		}
 	}
+}
+
+// Attack hurts a creep's health by a specified amount
+func (c *Creep) Attack(amount int) bool {
+	c.Health = c.Health - amount
+	if c.Health <= 0 {
+		return true
+	}
+	return false
 }
 
 // Draw draws the Creep to the screen

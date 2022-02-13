@@ -16,8 +16,9 @@ import (
 type Tower struct {
 	Coords image.Point
 	Cost   int
+	Damage int
 	Frame  int
-	Target int // the creep it's currently attacking
+	Target *Creep // the creep it's currently attacking
 	Sprite *SpriteSheet
 }
 
@@ -27,7 +28,7 @@ func NewBasicTower(g *Game) *Tower {
 	if !ok {
 		log.Fatal("Failed to retrieve basic tower from game resource map")
 	}
-	return &Tower{g.Cursor.Coords, 200, 0, -1, sprite}
+	return &Tower{g.Cursor.Coords, 200, 2, 0, nil, sprite}
 }
 
 // NewStrongTower is a convenience wrapper to make a strong-looking tower
@@ -37,28 +38,39 @@ func NewStrongTower(g *Game) *Tower {
 	if !ok {
 		log.Fatal("Failed to retrieve strong tower from game resource map")
 	}
-	return &Tower{g.Cursor.Coords, 500, 0, -1, sprite}
+	return &Tower{g.Cursor.Coords, 500, 5, 0, nil, sprite}
 }
 
 // Update handles game logic for towers
-func (t *Tower) Update(g *Game) {
+func (t *Tower) Update(g *Game) error {
 	// Construction animation
 	if t.Frame < len(t.Sprite.Sprite)-1 {
 		t.Frame++
 	}
 
-	if t.Target == -1 {
+	// Target Seeking
+	if t.Target == nil {
 		t.findNewTarget(g)
 	} else {
-		t.clearIfOutOfRange(g)
+		t.clearIfOutOfRange()
 	}
+
+	// Damage dealing
+	if t.Target != nil {
+		died := t.Target.Attack(t.Damage)
+		if died {
+			t.Target = nil
+		}
+	}
+
+	return nil
 }
 
 // Look for the first creep in range
 func (t *Tower) findNewTarget(g *Game) {
 	tileSize := 7
 	rangeSize := 2 * tileSize
-	for k, v := range g.Creeps {
+	for _, v := range g.Creeps {
 		hitboxRadius := 3
 		creepBox := image.Rectangle{
 			v.(*Creep).Coords.Add(image.Pt(-hitboxRadius, -hitboxRadius)),
@@ -72,20 +84,26 @@ func (t *Tower) findNewTarget(g *Game) {
 		)
 		withinRange := towerBox.Overlaps(creepBox)
 		if withinRange {
-			t.Target = k
+			t.Target = v.(*Creep)
 		}
 	}
 }
 
+// Stop targeting a creep if it's already dead
+func (t *Tower) cullDeadCreep() {
+	if t.Target.Health <= 0 {
+		t.Target = nil
+	}
+}
+
 // Clear current target when it gets out of range
-func (t *Tower) clearIfOutOfRange(g *Game) {
+func (t *Tower) clearIfOutOfRange() {
 	tileSize := 7
 	rangeSize := 2 * tileSize
 	hitboxRadius := 3
-	creep := g.Creeps[t.Target].(*Creep)
 	creepBox := image.Rectangle{
-		creep.Coords.Add(image.Pt(-hitboxRadius, -hitboxRadius)),
-		creep.Coords.Add(image.Pt(hitboxRadius, hitboxRadius)),
+		t.Target.Coords.Add(image.Pt(-hitboxRadius, -hitboxRadius)),
+		t.Target.Coords.Add(image.Pt(hitboxRadius, hitboxRadius)),
 	}
 	towerBox := image.Rect(
 		t.Coords.X-rangeSize,
@@ -95,7 +113,7 @@ func (t *Tower) clearIfOutOfRange(g *Game) {
 	)
 	withinRange := towerBox.Overlaps(creepBox)
 	if !withinRange {
-		t.Target = -1
+		t.Target = nil
 	}
 }
 
@@ -115,8 +133,8 @@ func (t *Tower) Draw(g *Game, screen *ebiten.Image) {
 	)).(*ebiten.Image), op)
 
 	// Draw shooting laser
-	if t.Target != -1 {
-		c := g.Creeps[t.Target].(*Creep)
+	if t.Target != nil {
+		c := t.Target
 		ebitenutil.DrawLine(screen,
 			float64(t.Coords.X),
 			float64(t.Coords.Y),
