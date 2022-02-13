@@ -77,15 +77,29 @@ type FramePosition struct {
 	H int `json:"h"`
 }
 
-// Sprite is a slice of frames used to create sprite animation, it would've been
-// nice to be able to call this "Frames" but that would cause confusion with the
-// "frames" field in the JSON file
-type Sprite []Frame
+// FrameTags contains tag data about frames to identify different parts of an
+// animation, e.g. idle animation, jump animation frames etc.
+type FrameTags struct {
+	Name      string `json:"name"`
+	From      int    `json:"from"`
+	To        int    `json:"to"`
+	Direction string `json:"direction"`
+}
+
+// Frames is a slice of frames used to create sprite animation
+type Frames []Frame
+
+// SpriteMeta contains sprite meta-data, basically everything except frame data
+type SpriteMeta struct {
+	ImageName string      `json:"image"`
+	FrameTags []FrameTags `json:"frameTags"`
+}
 
 // SpriteSheet is the root-node of sprite data, it contains frames and meta data
 // about them
 type SpriteSheet struct {
-	Sprite Sprite `json:"frames"`
+	Sprite Frames     `json:"frames"`
+	Meta   SpriteMeta `json:"meta"`
 	Image  *ebiten.Image
 }
 
