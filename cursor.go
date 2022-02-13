@@ -14,6 +14,7 @@ import (
 type Cursor struct {
 	Coords image.Point
 	Image  *ebiten.Image
+	Width  int
 }
 
 // Update implements Entity
@@ -43,7 +44,10 @@ func (c *Cursor) Move(dest image.Point) {
 // Draw implements Entity
 func (c *Cursor) Draw(g *Game, screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(float64(c.Coords.X), float64(c.Coords.Y))
+	op.GeoM.Translate(
+		float64(c.Coords.X-c.Width/2),
+		float64(c.Coords.Y-c.Width/2),
+	)
 	screen.DrawImage(c.Image, op)
 }
 
@@ -51,8 +55,9 @@ func (c *Cursor) Draw(g *Game, screen *ebiten.Image) {
 // It is shaped like a crosshair and is used to interact with the game
 func NewCursor(coords image.Point) *Cursor {
 
+	w := 3
 	i := image.NewPaletted(
-		image.Rect(0, 0, 3, 3),
+		image.Rect(0, 0, w, w),
 		NokiaPalette,
 	)
 	i.Pix = []uint8{
@@ -64,5 +69,6 @@ func NewCursor(coords image.Point) *Cursor {
 	return &Cursor{
 		Coords: coords,
 		Image:  ebiten.NewImageFromImage(i),
+		Width:  w,
 	}
 }

@@ -121,10 +121,13 @@ func (t *Tower) clearIfOutOfRange() {
 func (t *Tower) Draw(g *Game, screen *ebiten.Image) {
 
 	// Draw tower
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(float64(t.Coords.X-1), float64(t.Coords.Y-1))
 	s := t.Sprite
 	frame := s.Sprite[t.Frame]
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(
+		float64(t.Coords.X-frame.Position.W/2),
+		float64(t.Coords.Y-frame.Position.W/2),
+	)
 	screen.DrawImage(s.Image.SubImage(image.Rect(
 		frame.Position.X,
 		frame.Position.Y,
