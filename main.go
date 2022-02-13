@@ -230,10 +230,8 @@ func (g *Game) Update() error {
 
 // Draw draws the game screen by one frame
 func (g *Game) Draw(screen *ebiten.Image) {
-	// Light background with map
-	op := &ebiten.DrawImageOptions{}
+	// Light background
 	screen.Fill(ColorLight)
-	screen.DrawImage(g.Maps[g.MapIndex], op)
 
 	if g.Loading {
 		// Try using text with pixel font
@@ -244,6 +242,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		text.Draw(screen, txt, g.Font, g.Size.X/2-txtw, g.Size.Y/2-txth, ColorDark)
 		return
 	}
+
+	// Map background image
+	op := &ebiten.DrawImageOptions{}
+	screen.DrawImage(g.Maps[g.MapIndex], op)
 
 	hudSize := 6.0
 	ebitenutil.DrawRect(screen, 0, 0, float64(g.Size.X), hudSize, ColorDark)
