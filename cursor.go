@@ -8,6 +8,7 @@ import (
 	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 // Cursor is used to interact with game entities at the given coordinates
@@ -19,18 +20,20 @@ type Cursor struct {
 
 // Update implements Entity
 func (c *Cursor) Update(g *Game) error {
+	tileSize := 7
+
 	// Movement controls
-	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		c.Move(image.Pt(0, 1))
+	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
+		c.Move(image.Pt(0, tileSize))
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		c.Move(image.Pt(0, -1))
+	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
+		c.Move(image.Pt(0, -tileSize))
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		c.Move(image.Pt(-1, 0))
+	if inpututil.IsKeyJustPressed(ebiten.KeyA) {
+		c.Move(image.Pt(-tileSize, 0))
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		c.Move(image.Pt(1, 0))
+	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
+		c.Move(image.Pt(tileSize, 0))
 	}
 
 	return nil
@@ -51,9 +54,16 @@ func (c *Cursor) Draw(g *Game, screen *ebiten.Image) {
 	screen.DrawImage(c.Image, op)
 }
 
-// NewCursor creates a new cursor struct at the given coordinates
+// NewCursor creates a new cursor struct at the bottom-left of the map
 // It is shaped like a crosshair and is used to interact with the game
-func NewCursor(coords image.Point) *Cursor {
+func NewCursor() *Cursor {
+	tileSize := 7
+	hudOffset := 6
+	tileCenter := 3
+	coords := image.Pt(
+		2*tileSize+tileCenter,
+		5*tileSize+tileCenter+hudOffset,
+	)
 
 	w := 3
 	i := image.NewPaletted(

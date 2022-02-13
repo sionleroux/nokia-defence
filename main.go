@@ -121,7 +121,7 @@ func NewGame(g *Game) {
 	g.Maps[2] = loadImage("assets/maps/map3.png")
 	g.MapData = loadWays("map1")
 
-	g.Cursor = NewCursor(image.Pt(GameSize.X/2, GameSize.Y/2))
+	g.Cursor = NewCursor()
 
 	g.Loading = false
 }
