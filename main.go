@@ -61,23 +61,24 @@ func main() {
 
 // Game represents the main game state
 type Game struct {
-	Loading  bool
-	Size     image.Point
-	Cursor   *Cursor
-	Maps     []*ebiten.Image
-	MapData  Ways
-	Sounds   []*vorbis.Stream
-	Mplayer  []*vorbis.Stream
-	Mcontext *audio.Context
-	Music    *audio.Player
-	MapIndex int
-	Sprites  map[SpriteType]*SpriteSheet
-	Towers   Towers
-	Creeps   Creeps
-	Money    int
-	MobFrame int
-	Count    int
-	Font     font.Face
+	Loading       bool
+	Size          image.Point
+	Cursor        *Cursor
+	Maps          []*ebiten.Image
+	MapData       Ways
+	Sounds        []*vorbis.Stream
+	Mplayer       []*vorbis.Stream
+	Mcontext      *audio.Context
+	Music         *audio.Player
+	MapIndex      int
+	Sprites       map[SpriteType]*SpriteSheet
+	Towers        Towers
+	Creeps        Creeps
+	SpawnCooldown int
+	Money         int
+	MobFrame      int
+	Count         int
+	Font          font.Face
 }
 
 // NewGame sets up a new game object with default states and game objects
@@ -200,7 +201,7 @@ func (g *Game) Update() error {
 		}
 	}
 
-	if len(g.Creeps) < 1 {
+	if g.SpawnCooldown == 0 {
 		spawn := g.MapData[0]
 		gridScale := 7
 		hudMargin := 5
@@ -216,6 +217,9 @@ func (g *Game) Update() error {
 			Sprite:       g.Sprites[spriteSmallMonster],
 		})
 	}
+
+	// Spawn a new creep every N ticks
+	g.SpawnCooldown = (g.SpawnCooldown + 1) % (3 * 60)
 
 	return nil
 }
