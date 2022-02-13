@@ -86,5 +86,5 @@ func (c *Creep) Draw(g *Game, screen *ebiten.Image) {
 	)).(*ebiten.Image), op)
 }
 
-// Creeps is a slice of Tower entities
-type Creeps []Entity
+// Creeps is a slice of Creep entities
+type Creeps []*Creep

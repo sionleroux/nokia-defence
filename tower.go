@@ -73,8 +73,8 @@ func (t *Tower) findNewTarget(g *Game) {
 	for _, v := range g.Creeps {
 		hitboxRadius := 3
 		creepBox := image.Rectangle{
-			v.(*Creep).Coords.Add(image.Pt(-hitboxRadius, -hitboxRadius)),
-			v.(*Creep).Coords.Add(image.Pt(hitboxRadius, hitboxRadius)),
+			v.Coords.Add(image.Pt(-hitboxRadius, -hitboxRadius)),
+			v.Coords.Add(image.Pt(hitboxRadius, hitboxRadius)),
 		}
 		towerBox := image.Rect(
 			t.Coords.X-rangeSize,
@@ -84,7 +84,7 @@ func (t *Tower) findNewTarget(g *Game) {
 		)
 		withinRange := towerBox.Overlaps(creepBox)
 		if withinRange {
-			t.Target = v.(*Creep)
+			t.Target = v
 		}
 	}
 }
@@ -146,4 +146,4 @@ func (t *Tower) Draw(g *Game, screen *ebiten.Image) {
 }
 
 // Towers is a slice of Tower entities
-type Towers []Entity
+type Towers []*Tower
