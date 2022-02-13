@@ -47,6 +47,12 @@ func (t *Tower) Update(g *Game) {
 		t.Frame++
 	}
 
+	if t.Target == -1 {
+		t.findNewTarget(g)
+	}
+}
+
+func (t *Tower) findNewTarget(g *Game) {
 	// Look for the first creep in range
 	tileSize := 7
 	rangeSize := 2 * tileSize
