@@ -18,6 +18,7 @@ type Creep struct {
 	NextWaypoint int
 	Health       int // Hit points
 	Damage       int // How much damage it deals to the base
+	Loot         int // How much money you get when it dies
 	Frame        int
 	LastMoved    int
 	Direction    int  // Which way the creep is moving
@@ -35,6 +36,7 @@ const (
 // Update handles game logic for a Creep
 func (c *Creep) Update(g *Game) error {
 	if c.Health <= 0 {
+		g.Money += c.Loot
 		return errors.New("Creep died")
 	}
 

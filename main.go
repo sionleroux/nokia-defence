@@ -211,6 +211,7 @@ func (g *Game) Update() error {
 			NextWaypoint: 1,
 			Damage:       0,
 			Health:       1000,
+			Loot:         20,
 			Frame:        0,
 			Sprite:       g.Sprites[spriteSmallMonster],
 		})
