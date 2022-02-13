@@ -34,7 +34,7 @@ var (
 	// GameSize is the screen resolution of a Nokia 3310
 	GameSize image.Point = image.Point{84, 48}
 	// StartingMoney is the amount of money you start the game with
-	StartingMoney int = 1000
+	StartingMoney int = 500
 )
 
 func main() {
@@ -211,7 +211,7 @@ func (g *Game) Update() error {
 			NextWaypoint: 1,
 			Damage:       0,
 			Health:       1000,
-			Loot:         20,
+			Loot:         50,
 			Frame:        0,
 			Sprite:       g.Sprites[spriteSmallMonster],
 		})
