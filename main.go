@@ -153,19 +153,7 @@ func (g *Game) Update() error {
 		return nil
 	}
 
-	// Movement controls
-	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		g.Cursor.Move(image.Pt(0, 1))
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		g.Cursor.Move(image.Pt(0, -1))
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		g.Cursor.Move(image.Pt(-1, 0))
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		g.Cursor.Move(image.Pt(1, 0))
-	}
+	g.Cursor.Update(g)
 
 	for _, t := range g.Towers {
 		t.Update(g)
@@ -255,39 +243,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		c.Draw(g, screen)
 	}
 
-	op.GeoM.Translate(float64(g.Cursor.Coords.X), float64(g.Cursor.Coords.Y))
-	screen.DrawImage(g.Cursor.Image, op)
-}
-
-// Cursor is used to interact with game entities at the given coordinates
-type Cursor struct {
-	Coords image.Point
-	Image  *ebiten.Image
-}
-
-// NewCursor creates a new cursor struct at the given coordinates
-// It is shaped like a crosshair and is used to interact with the game
-func NewCursor(coords image.Point) *Cursor {
-
-	i := image.NewPaletted(
-		image.Rect(0, 0, 3, 3),
-		NokiaPalette,
-	)
-	i.Pix = []uint8{
-		0, 1, 0,
-		1, 0, 1,
-		0, 1, 0,
-	}
-
-	return &Cursor{
-		Coords: coords,
-		Image:  ebiten.NewImageFromImage(i),
-	}
-}
-
-// Move moves the player upwards
-func (c *Cursor) Move(dest image.Point) {
-	c.Coords = c.Coords.Add(dest)
+	g.Cursor.Draw(g, screen)
 }
 
 // Entity is anything that can be interacted with in the game and drawn  to the
