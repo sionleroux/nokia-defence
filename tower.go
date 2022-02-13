@@ -49,17 +49,20 @@ func (t *Tower) Update(g *Game) {
 
 	// Look for the first creep in range
 	tileSize := 7
+	rangeSize := 2 * tileSize
 	for k, v := range g.Creeps {
-		withinRange := image.Rectangle{
-			v.(*Creep).Coords,
-			v.(*Creep).Coords,
-		}.In(
-			image.Rect(
-				t.Coords.X-tileSize,
-				t.Coords.Y-tileSize,
-				t.Coords.X+tileSize,
-				t.Coords.Y+tileSize,
-			))
+		hitboxRadius := 3
+		creepBox := image.Rectangle{
+			v.(*Creep).Coords.Add(image.Pt(-hitboxRadius, -hitboxRadius)),
+			v.(*Creep).Coords.Add(image.Pt(hitboxRadius, hitboxRadius)),
+		}
+		towerBox := image.Rect(
+			t.Coords.X-rangeSize,
+			t.Coords.Y-rangeSize,
+			t.Coords.X+rangeSize,
+			t.Coords.Y+rangeSize,
+		)
+		withinRange := towerBox.Overlaps(creepBox)
 		if withinRange {
 			t.Target = k
 		}
