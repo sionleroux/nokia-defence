@@ -76,7 +76,6 @@ type Game struct {
 	Creeps        Creeps
 	SpawnCooldown int
 	Money         int
-	MobFrame      int
 	Count         int
 	Font          font.Face
 }
@@ -179,11 +178,6 @@ func (g *Game) Update() error {
 		}
 	}
 
-	if g.Count%10 == 0 {
-		g.MobFrame = (g.MobFrame + 1) % len(g.Sprites[spriteBigMonsterHorizont].Sprite)
-	}
-	g.Count++
-
 	// Tower placement controls
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
 		t := NewBasicTower(g)
@@ -262,17 +256,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	op.GeoM.Translate(float64(g.Cursor.Coords.X), float64(g.Cursor.Coords.Y))
 	screen.DrawImage(g.Cursor.Image, op)
-	// Try drawing a moving monster sprite
-	op.GeoM.Reset()
-	op.GeoM.Translate(float64(20+g.Count/10), 20)
-	mob := g.Sprites[spriteBigMonsterHorizont]
-	frame := mob.Sprite[g.MobFrame]
-	screen.DrawImage(mob.Image.SubImage(image.Rect(
-		frame.Position.X,
-		frame.Position.Y,
-		frame.Position.X+frame.Position.W,
-		frame.Position.Y+frame.Position.H,
-	)).(*ebiten.Image), op)
 }
 
 // Cursor is used to interact with game entities at the given coordinates
