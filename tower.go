@@ -49,11 +49,13 @@ func (t *Tower) Update(g *Game) {
 
 	if t.Target == -1 {
 		t.findNewTarget(g)
+	} else {
+		t.clearIfOutOfRange(g)
 	}
 }
 
+// Look for the first creep in range
 func (t *Tower) findNewTarget(g *Game) {
-	// Look for the first creep in range
 	tileSize := 7
 	rangeSize := 2 * tileSize
 	for k, v := range g.Creeps {
@@ -72,6 +74,28 @@ func (t *Tower) findNewTarget(g *Game) {
 		if withinRange {
 			t.Target = k
 		}
+	}
+}
+
+// Clear current target when it gets out of range
+func (t *Tower) clearIfOutOfRange(g *Game) {
+	tileSize := 7
+	rangeSize := 2 * tileSize
+	hitboxRadius := 3
+	creep := g.Creeps[t.Target].(*Creep)
+	creepBox := image.Rectangle{
+		creep.Coords.Add(image.Pt(-hitboxRadius, -hitboxRadius)),
+		creep.Coords.Add(image.Pt(hitboxRadius, hitboxRadius)),
+	}
+	towerBox := image.Rect(
+		t.Coords.X-rangeSize,
+		t.Coords.Y-rangeSize,
+		t.Coords.X+rangeSize,
+		t.Coords.Y+rangeSize,
+	)
+	withinRange := towerBox.Overlaps(creepBox)
+	if !withinRange {
+		t.Target = -1
 	}
 }
 
