@@ -63,16 +63,21 @@ func BuyTower(g *Game) {
 			return
 		}
 	}
-	var occupied bool
-	for _, v := range g.Towers {
+	for k, v := range g.Towers {
 		if v.Coords == t.Coords {
-			// TODO: show upgrades menu
 			log.Println("Building space occupied")
-			occupied = true
+			tu := NewStrongTower(g)
+			upgradediff := g.Money - tu.Cost
+			if upgradediff >= 0 {
+				log.Printf("Upgrading tower %d - %d = %d\n", g.Money, tu.Cost, upgradediff)
+				g.Towers[k] = tu
+				g.Money = upgradediff
+				g.Cursor.Cooldown = 10
+			}
 			return
 		}
 	}
-	if !nobuild && !occupied && moneydiff >= 0 {
+	if moneydiff >= 0 {
 		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
 		g.Towers = append(g.Towers, t)
 		g.Money = moneydiff
