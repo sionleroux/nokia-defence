@@ -10,6 +10,7 @@ import (
 	"image"
 	"image/color"
 	"log"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -88,6 +89,7 @@ const (
 	gameStateWave
 	gameStateLose
 	gameStateWin
+	gameStateWaiting
 )
 
 // NewGame sets up a new game object with default states and game objects
@@ -138,6 +140,21 @@ func NewGame(g *Game) {
 	g.State = gameStateTitle
 }
 
+// Reset the game to initial state, ready for a new round
+func (g *Game) Reset() {
+	g.Creeps = nil
+	g.Towers = nil
+	g.SpawnCooldown = 0
+	g.Money = StartingMoney
+	g.Count = 0
+	g.TitleFrame = 0
+	g.Cursor = NewCursor()
+	music := NewMusicPlayer(g.Sounds[soundMusicTitle], g.Mcontext)
+	music.Play()
+	g.Music = music
+	g.State = gameStateTitle
+}
+
 // Layout is hardcoded for now, may be made dynamic in future
 func (g *Game) Layout(outsideWidth int, outsideHeight int) (screenWidth int, screenHeight int) {
 	return g.Size.X, g.Size.Y
@@ -161,9 +178,23 @@ func (g *Game) Update() error {
 	}
 
 	// Skip updating while the game is loading
-	if g.State == gameStateLoading ||
-		g.State == gameStateWin ||
-		g.State == gameStateLose {
+	if g.State == gameStateLoading || g.State == gameStateWaiting {
+		return nil
+	}
+
+	if g.State == gameStateLose {
+		g.Music.Pause()
+		music := NewSoundPlayer(g.Sounds[soundFail], g.Mcontext)
+		music.Rewind()
+		music.Play()
+		g.Music = music
+		g.State = gameStateWaiting
+		gloat := time.NewTimer(time.Second * 4)
+		go func() {
+			log.Println("Gloating")
+			<-gloat.C
+			g.Reset()
+		}()
 		return nil
 	}
 

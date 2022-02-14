@@ -109,7 +109,8 @@ func (c *Creep) navigateWaypoints(g *Game) {
 		if next < len(g.MapData) {
 			c.NextWaypoint++
 		} else {
-			log.Fatal("You failed")
+			log.Println("You failed")
+			g.State = gameStateLose
 		}
 	}
 }
