@@ -71,6 +71,9 @@
   "size": { "w": 35, "h": 7 },
   "scale": "1",
   "frameTags": [
+   { "name": "horizontal_moving", "from": 0, "to": 6, "direction": "forward" },
+   { "name": "turn", "from": 0, "to": 6, "direction": "forward" },
+   { "name": "vertical_moving", "from": 0, "to": 6, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 2", "opacity": 255, "blendMode": "normal" }
