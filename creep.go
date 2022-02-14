@@ -30,8 +30,8 @@ type Creep struct {
 func NewTinyCreep(g *Game) *Creep {
 	return &Creep{
 		NextWaypoint: 1,
-		Health:       100,
-		Loot:         50,
+		Health:       200,
+		Loot:         30,
 		Sprite:       g.Sprites[spriteTinyMonster],
 	}
 }
