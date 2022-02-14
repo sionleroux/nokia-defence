@@ -5,7 +5,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"image"
 	"image/color"
@@ -179,11 +178,6 @@ func (g *Game) Layout(outsideWidth int, outsideHeight int) (screenWidth int, scr
 // Update calculates game logic
 func (g *Game) Update() error {
 
-	// Pressing Q any time quits immediately
-	if ebiten.IsKeyPressed(ebiten.KeyQ) {
-		return errors.New("game quit by player")
-	}
-
 	// Pressing F toggles full-screen
 	if inpututil.IsKeyJustPressed(ebiten.KeyF) {
 		if ebiten.IsFullscreen() {
@@ -269,6 +263,13 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyX) {
 		BuyTower(g)
 	}
+	// Sell a tower
+	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+		if k := IsOccupied(g, g.Cursor.Coords); k != -1 {
+			g.Towers = append(g.Towers[:k], g.Towers[k+1:]...)
+			g.Money += 100
+		}
+	}
 
 	if g.SpawnCooldown == 0 {
 		spawn := g.MapData[0]
@@ -336,7 +337,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	moneytxt := fmt.Sprintf("D%d", g.Money)
 	text.Draw(screen, moneytxt, g.Font, 1, 5, ColorLight)
 	var cost int
-	if IsOccupied(g, g.Cursor.Coords) {
+	if IsOccupied(g, g.Cursor.Coords) != -1 {
 		cost = 300
 	} else {
 		cost = 200
