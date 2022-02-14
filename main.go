@@ -86,7 +86,7 @@ const (
 	gameStateLoading int = iota
 	gameStateTitle
 	gameStateBuild
-	gameStateWave
+	gameStateWon
 	gameStateLose
 	gameStateWin
 	gameStateWaiting
@@ -164,7 +164,7 @@ func (g *Game) Reset(win bool) {
 	g.Count = 0
 	g.TitleFrame = 0
 	g.Cursor = NewCursor()
-	if win {
+	if win && g.MapIndex < 1 {
 		g.State = gameStateWaiting
 		g.MapData = g.MapData2.Ways
 		g.NoBuild = g.MapData2.NoBuild
@@ -176,7 +176,11 @@ func (g *Game) Reset(win bool) {
 		g.NoBuild = g.MapData1.NoBuild
 		g.MapIndex = 0
 		g.Sounds[soundMusicTitle].Play()
-		g.State = gameStateTitle
+		if win {
+			g.State = gameStateWon
+		} else {
+			g.State = gameStateTitle
+		}
 	}
 }
 
@@ -204,6 +208,11 @@ func (g *Game) Update() error {
 
 	// Skip updating while the game is loading
 	if g.State == gameStateLoading || g.State == gameStateWaiting {
+		return nil
+	}
+
+	if g.State == gameStateWon && inpututil.IsKeyJustPressed(ebiten.KeyX) {
+		g.State = gameStateTitle
 		return nil
 	}
 
@@ -336,8 +345,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(ColorLight)
 
 	if g.State == gameStateLoading {
-		// Try using text with pixel font
 		txt := "Loading..."
+		txtf, _ := font.BoundString(g.Font, txt)
+		txth := (txtf.Max.Y - txtf.Min.Y).Ceil() / 2
+		txtw := (txtf.Max.X - txtf.Min.X).Ceil() / 2
+		text.Draw(screen, txt, g.Font, g.Size.X/2-txtw, g.Size.Y/2-txth, ColorDark)
+		return
+	}
+
+	if g.State == gameStateWon {
+		txt := "YOU WON!"
 		txtf, _ := font.BoundString(g.Font, txt)
 		txth := (txtf.Max.Y - txtf.Min.Y).Ceil() / 2
 		txtw := (txtf.Max.X - txtf.Min.X).Ceil() / 2
