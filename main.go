@@ -168,7 +168,7 @@ func (g *Game) Update() error {
 	}
 
 	if g.State == gameStateTitle {
-		g.Count = (g.Count + 1) % 20
+		g.Count = (g.Count + 1) % 15
 		if g.Count == 0 {
 			g.TitleFrame++
 		}
