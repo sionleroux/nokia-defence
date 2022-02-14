@@ -199,7 +199,7 @@ func (g *Game) Update() error {
 	}
 
 	// Tower placement controls
-	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyX) {
 		t := NewBasicTower(g)
 		moneydiff := g.Money - t.Cost
 		tileSize := 7
