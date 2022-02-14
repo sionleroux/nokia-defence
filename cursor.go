@@ -20,7 +20,9 @@ type Cursor struct {
 
 // Update implements Entity
 func (c *Cursor) Update(g *Game) error {
+	oldPos := c.Coords
 	tileSize := 7
+	hudOffset := 5
 
 	// Movement controls
 	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
@@ -34,6 +36,14 @@ func (c *Cursor) Update(g *Game) error {
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
 		c.Move(image.Pt(tileSize, 0))
+	}
+
+	// Keep the cursor inside the map
+	if c.Coords.X < 0 ||
+		c.Coords.Y < hudOffset ||
+		c.Coords.X > g.Size.X ||
+		c.Coords.Y > g.Size.Y {
+		c.Coords = oldPos
 	}
 
 	return nil
