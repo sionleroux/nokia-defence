@@ -13,10 +13,12 @@ import (
 
 // Cursor is used to interact with game entities at the given coordinates
 type Cursor struct {
-	Coords   image.Point
-	Image    *ebiten.Image
-	Cooldown int // Wait to show off construction animation
-	Width    int
+	Coords     image.Point
+	Width      int
+	Image      *ebiten.Image
+	Cooldown   int // Wait to show off construction animation
+	BlinkCount int // Wait to blink the cursor
+	BlinkOn    bool
 }
 
 // Update implements Entity
@@ -27,6 +29,12 @@ func (c *Cursor) Update(g *Game) error {
 
 	if c.Cooldown > 0 {
 		c.Cooldown--
+	}
+
+	blinkAfter := 40
+	c.BlinkCount = (c.BlinkCount + 1) % blinkAfter
+	if c.BlinkCount == 0 {
+		c.BlinkOn = !c.BlinkOn
 	}
 
 	// Movement controls
@@ -58,11 +66,16 @@ func (c *Cursor) Update(g *Game) error {
 func (c *Cursor) Move(dest image.Point) {
 	c.Coords = c.Coords.Add(dest)
 	c.Cooldown = 0
+	c.BlinkOn = true
+	c.BlinkCount = 1
 }
 
 // Draw implements Entity
 func (c *Cursor) Draw(g *Game, screen *ebiten.Image) {
 	if c.Cooldown != 0 {
+		return
+	}
+	if !c.BlinkOn {
 		return
 	}
 	op := &ebiten.DrawImageOptions{}
