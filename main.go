@@ -134,14 +134,7 @@ func NewGame(g *Game) {
 	g.MapData = g.MapData1.Ways
 	g.NoBuild = g.MapData1.NoBuild
 
-	g.Waves = []Creeps{
-		Creeps{
-			NewTinyCreep(g),
-			NewSmallCreep(g),
-			NewTinyCreep(g),
-		},
-	}
-
+	g.Waves = NewWaves(g)
 	g.Cursor = NewCursor()
 
 	g.State = gameStateTitle
@@ -153,13 +146,7 @@ func (g *Game) Reset(win bool) {
 	g.Towers = nil
 	g.SpawnCooldown = 0
 	g.Spawned = 0
-	g.Waves = []Creeps{
-		Creeps{
-			NewTinyCreep(g),
-			NewSmallCreep(g),
-			NewTinyCreep(g),
-		},
-	}
+	g.Waves = NewWaves(g)
 	g.Money = StartingMoney
 	g.Count = 0
 	g.TitleFrame = 0
@@ -273,7 +260,7 @@ func (g *Game) Update() error {
 		}
 	}
 
-	if g.Spawned == len(g.Waves[0]) && len(g.Creeps) <= 0 {
+	if g.Spawned == len(g.Waves[g.MapIndex]) && len(g.Creeps) <= 0 {
 		log.Println("You win")
 		g.State = gameStateWin
 	}
@@ -322,8 +309,8 @@ func (g *Game) Update() error {
 		gridScale := 7
 		hudMargin := 5
 		gridSquareMid := 4
-		if g.Spawned < len(g.Waves[0]) {
-			creep := g.Waves[0][g.Spawned]
+		if g.Spawned < len(g.Waves[g.MapIndex]) {
+			creep := g.Waves[g.MapIndex][g.Spawned]
 			creep.Coords = image.Pt(
 				spawn.X*gridScale+gridSquareMid,
 				spawn.Y*gridScale+hudMargin+gridSquareMid,

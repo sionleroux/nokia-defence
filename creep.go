@@ -56,6 +56,21 @@ func NewBigCreep(g *Game) *Creep {
 	}
 }
 
+// NewWaves makes new waves of creeps
+func NewWaves(g *Game) []Creeps {
+	return []Creeps{
+		Creeps{
+			NewTinyCreep(g),
+			NewSmallCreep(g),
+			NewTinyCreep(g),
+		},
+		Creeps{
+			NewTinyCreep(g),
+			NewTinyCreep(g),
+		},
+	}
+}
+
 const (
 	directionRight int = iota
 	directionLeft
