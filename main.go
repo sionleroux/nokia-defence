@@ -177,16 +177,6 @@ func (g *Game) Update() error {
 			g.Cursor.Cooldown = 11
 		}
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyZ) {
-		t := NewStrongTower(g)
-		moneydiff := g.Money - t.Cost
-		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
-		if moneydiff >= 0 {
-			g.Towers = append(g.Towers, t)
-			g.Money = moneydiff
-			g.Cursor.Cooldown = 10
-		}
-	}
 
 	if g.SpawnCooldown == 0 {
 		spawn := g.MapData[0]
