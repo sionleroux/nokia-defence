@@ -267,41 +267,7 @@ func (g *Game) Update() error {
 
 	// Tower placement controls
 	if inpututil.IsKeyJustPressed(ebiten.KeyX) {
-		t := NewBasicTower(g)
-		moneydiff := g.Money - t.Cost
-		tileSize := 7
-		hudMargin := 5
-		var nobuild bool
-		for _, v := range g.NoBuild {
-			nobuild = image.Rect(
-				v.X*tileSize,
-				v.Y*tileSize+hudMargin,
-				v.X*tileSize+tileSize,
-				v.Y*tileSize+tileSize+hudMargin,
-			).Overlaps(image.Rectangle{
-				t.Coords.Add(image.Pt(-2, -2)),
-				t.Coords.Add(image.Pt(2, 2)),
-			})
-			if nobuild == true {
-				log.Println("Building not allowed here")
-				break
-			}
-		}
-		var occupied bool
-		for _, v := range g.Towers {
-			if v.Coords == t.Coords {
-				// TODO: show upgrades menu
-				log.Println("Building space occupied")
-				occupied = true
-				break
-			}
-		}
-		if !nobuild && !occupied && moneydiff >= 0 {
-			log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
-			g.Towers = append(g.Towers, t)
-			g.Money = moneydiff
-			g.Cursor.Cooldown = 11
-		}
+		BuyTower(g)
 	}
 
 	if g.SpawnCooldown == 0 {

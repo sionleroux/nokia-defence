@@ -38,7 +38,46 @@ func NewStrongTower(g *Game) *Tower {
 	if !ok {
 		log.Fatal("Failed to retrieve strong tower from game resource map")
 	}
-	return &Tower{g.Cursor.Coords, 500, 5, 0, nil, sprite}
+	return &Tower{g.Cursor.Coords, 300, 5, 0, nil, sprite}
+}
+
+// BuyTower buys a tower at the cursor position if possible
+func BuyTower(g *Game) {
+	t := NewBasicTower(g)
+	moneydiff := g.Money - t.Cost
+	tileSize := 7
+	hudMargin := 5
+	var nobuild bool
+	for _, v := range g.NoBuild {
+		nobuild = image.Rect(
+			v.X*tileSize,
+			v.Y*tileSize+hudMargin,
+			v.X*tileSize+tileSize,
+			v.Y*tileSize+tileSize+hudMargin,
+		).Overlaps(image.Rectangle{
+			t.Coords.Add(image.Pt(-2, -2)),
+			t.Coords.Add(image.Pt(2, 2)),
+		})
+		if nobuild == true {
+			log.Println("Building not allowed here")
+			return
+		}
+	}
+	var occupied bool
+	for _, v := range g.Towers {
+		if v.Coords == t.Coords {
+			// TODO: show upgrades menu
+			log.Println("Building space occupied")
+			occupied = true
+			return
+		}
+	}
+	if !nobuild && !occupied && moneydiff >= 0 {
+		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
+		g.Towers = append(g.Towers, t)
+		g.Money = moneydiff
+		g.Cursor.Cooldown = 11
+	}
 }
 
 // Update handles game logic for towers
