@@ -50,7 +50,7 @@ func NewSmallCreep(g *Game) *Creep {
 func NewBigCreep(g *Game) *Creep {
 	return &Creep{
 		NextWaypoint: 1,
-		Health:       5000,
+		Health:       4500,
 		Loot:         200,
 		Sprite:       g.Sprites[spriteBigMonsterVertical],
 	}
