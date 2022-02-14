@@ -89,6 +89,7 @@ const (
 	gameStateLose
 	gameStateWin
 	gameStateWaiting
+	gameStatePause
 )
 
 // NewGame sets up a new game object with default states and game objects
@@ -241,6 +242,17 @@ func (g *Game) Update() error {
 		return nil
 	}
 
+	if g.State == gameStatePause {
+		if inpututil.IsKeyJustPressed(ebiten.KeyZ) {
+			g.State = gameStateBuild
+		}
+		return nil
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyZ) {
+		g.State = gameStatePause
+		return nil
+	}
+
 	g.Cursor.Update(g)
 
 	for _, t := range g.Towers {
@@ -309,6 +321,15 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	if g.State == gameStateWon {
 		txt := "YOU WON!"
+		txtf, _ := font.BoundString(g.Font, txt)
+		txth := (txtf.Max.Y - txtf.Min.Y).Ceil() / 2
+		txtw := (txtf.Max.X - txtf.Min.X).Ceil() / 2
+		text.Draw(screen, txt, g.Font, g.Size.X/2-txtw, g.Size.Y/2-txth, ColorDark)
+		return
+	}
+
+	if g.State == gameStatePause {
+		txt := "Paused..."
 		txtf, _ := font.BoundString(g.Font, txt)
 		txth := (txtf.Max.Y - txtf.Min.Y).Ceil() / 2
 		txtw := (txtf.Max.X - txtf.Min.X).Ceil() / 2
