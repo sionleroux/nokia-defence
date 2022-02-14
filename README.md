@@ -9,17 +9,22 @@ A Tower Defence game for Web and Desktop written as if for the Nokia 3310:
 
 This is a submission for [Nokia 3310 Jam 4](https://itch.io/jam/nokiajam4) made using the [Ebiten](https://ebiten.org/) library.
 
+You can download the published game or play in your browser at: [sinisterstuf.itch.io/nokia-defence][itchio-link]
+
+[![Play on itch.io](artwork/itchio-badge.svg)][itchio-link]
+
+[![Screen recording of actual gameplay](artwork/game-preview.gif)][itchio-link]
+
 ## For game testers
 
 For alpha testing use this [link to download the latest development build][nightly-link] including Windows EXE, Mac app, Linux binary, as well as other resources for testing and editing.
 
-[nightly-link]: https://nightly.link/sinisterstuf/nokia-defence/workflows/build/main/nokia-defence-bundle.zip
-
 Game controls:
-- F: toggle full-screen
-- Q: quit the game
 - WASD: move cursor
-- E: place a tower (action)
+- X: (action) place/upgrade a tower (action)
+- Q: sell a tower
+- Z: pause the game
+- F: toggle full-screen
 
 ## For programmers
 
@@ -30,3 +35,6 @@ To build the game yourself, run: `go build .` it will produce an nokia-defence f
 To run the tests, run: `go test ./...` but there are no tests yet.
 
 The project has a very simple, flat structure, the first place to start looking is the main.go file.
+
+[nightly-link]: https://nightly.link/sinisterstuf/nokia-defence/workflows/build/main/nokia-defence-bundle.zip
+[itchio-link]: https://sinisterstuf.itch.io/nokia-defence
