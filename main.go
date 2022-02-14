@@ -65,6 +65,9 @@ type Game struct {
 	Size          image.Point
 	Cursor        *Cursor
 	Maps          []*ebiten.Image
+	MapData1      MapData
+	MapData2      MapData
+	Waves         []Creeps
 	MapData       Ways
 	NoBuild       NoBuild // Places where you can't build
 	Sounds        []*vorbis.Stream
@@ -75,6 +78,7 @@ type Game struct {
 	Sprites       map[SpriteType]*SpriteSheet
 	Towers        Towers
 	Creeps        Creeps
+	Spawned       int
 	SpawnCooldown int
 	Money         int
 	Count         int
@@ -131,9 +135,18 @@ func NewGame(g *Game) {
 	g.Maps[0] = loadImage("assets/maps/map1.png")
 	g.Maps[1] = loadImage("assets/maps/map2.png")
 	g.Maps[2] = loadImage("assets/maps/map3.png")
-	mapdata := loadWays("map1")
-	g.MapData = mapdata.Ways
-	g.NoBuild = mapdata.NoBuild
+	g.MapData1 = loadWays("map1")
+	g.MapData2 = loadWays("map2")
+	g.MapData = g.MapData1.Ways
+	g.NoBuild = g.MapData1.NoBuild
+
+	g.Waves = []Creeps{
+		Creeps{
+			NewTinyCreep(g),
+			NewSmallCreep(g),
+			NewBigCreep(g),
+		},
+	}
 
 	g.Cursor = NewCursor()
 
@@ -145,6 +158,14 @@ func (g *Game) Reset() {
 	g.Creeps = nil
 	g.Towers = nil
 	g.SpawnCooldown = 0
+	g.Spawned = 0
+	g.Waves = []Creeps{
+		Creeps{
+			NewTinyCreep(g),
+			NewSmallCreep(g),
+			NewBigCreep(g),
+		},
+	}
 	g.Money = StartingMoney
 	g.Count = 0
 	g.TitleFrame = 0
@@ -273,18 +294,15 @@ func (g *Game) Update() error {
 		gridScale := 7
 		hudMargin := 5
 		gridSquareMid := 4
-		g.Creeps = append(g.Creeps, &Creep{
-			Coords: image.Pt(
+		if g.Spawned < len(g.Waves[0]) {
+			creep := g.Waves[0][g.Spawned]
+			creep.Coords = image.Pt(
 				spawn.X*gridScale+gridSquareMid,
 				spawn.Y*gridScale+hudMargin+gridSquareMid,
-			),
-			NextWaypoint: 1,
-			Damage:       0,
-			Health:       1000,
-			Loot:         50,
-			Frame:        0,
-			Sprite:       g.Sprites[spriteSmallMonster],
-		})
+			)
+			g.Creeps = append(g.Creeps, creep)
+			g.Spawned++
+		}
 	}
 
 	// Spawn a new creep every N ticks

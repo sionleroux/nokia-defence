@@ -26,6 +26,36 @@ type Creep struct {
 	Sprite       *SpriteSheet
 }
 
+// NewTinyCreep returns a new creep with properties copied from creepTiny
+func NewTinyCreep(g *Game) *Creep {
+	return &Creep{
+		NextWaypoint: 1,
+		Health:       500,
+		Loot:         10,
+		Sprite:       g.Sprites[spriteTinyMonster],
+	}
+}
+
+// NewSmallCreep returns a new creep with properties copied from creepSmall
+func NewSmallCreep(g *Game) *Creep {
+	return &Creep{
+		NextWaypoint: 1,
+		Health:       1000,
+		Loot:         50,
+		Sprite:       g.Sprites[spriteSmallMonster],
+	}
+}
+
+// NewBigCreep returns a new creep with properties copied from creepBig
+func NewBigCreep(g *Game) *Creep {
+	return &Creep{
+		NextWaypoint: 1,
+		Health:       5000,
+		Loot:         200,
+		Sprite:       g.Sprites[spriteBigMonsterVertical],
+	}
+}
+
 const (
 	directionRight int = iota
 	directionLeft
