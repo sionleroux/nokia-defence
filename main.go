@@ -66,6 +66,7 @@ type Game struct {
 	Cursor        *Cursor
 	Maps          []*ebiten.Image
 	MapData       Ways
+	NoBuild       NoBuild // Places where you can't build
 	Sounds        []*vorbis.Stream
 	Mplayer       []*vorbis.Stream
 	Mcontext      *audio.Context
@@ -119,7 +120,9 @@ func NewGame(g *Game) {
 	g.Maps[0] = loadImage("assets/maps/map1.png")
 	g.Maps[1] = loadImage("assets/maps/map2.png")
 	g.Maps[2] = loadImage("assets/maps/map3.png")
-	g.MapData = loadWays("map1")
+	mapdata := loadWays("map1")
+	g.MapData = mapdata.Ways
+	g.NoBuild = mapdata.NoBuild
 
 	g.Cursor = NewCursor()
 
@@ -170,7 +173,24 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
 		t := NewBasicTower(g)
 		moneydiff := g.Money - t.Cost
-		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
+		tileSize := 7
+		hudMargin := 5
+		var nobuild bool
+		for _, v := range g.NoBuild {
+			nobuild = image.Rect(
+				v.X*tileSize,
+				v.Y*tileSize+hudMargin,
+				v.X*tileSize+tileSize,
+				v.Y*tileSize+tileSize+hudMargin,
+			).Overlaps(image.Rectangle{
+				t.Coords.Add(image.Pt(-2, -2)),
+				t.Coords.Add(image.Pt(2, 2)),
+			})
+			if nobuild == true {
+				log.Println("Building not allowed here")
+				break
+			}
+		}
 		var occupied bool
 		for _, v := range g.Towers {
 			if v.Coords == t.Coords {
@@ -180,7 +200,8 @@ func (g *Game) Update() error {
 				break
 			}
 		}
-		if !occupied && moneydiff >= 0 {
+		if !nobuild && !occupied && moneydiff >= 0 {
+			log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
 			g.Towers = append(g.Towers, t)
 			g.Money = moneydiff
 			g.Cursor.Cooldown = 11

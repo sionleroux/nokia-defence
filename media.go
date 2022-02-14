@@ -112,13 +112,17 @@ type Waypoint struct {
 // Ways is a slice of waypoints from spawn point to the base
 type Ways []*Waypoint
 
+// NoBuild is a slice of points for places you can't build
+type NoBuild []*Waypoint
+
 // MapData is waypoint data for a level map
 type MapData struct {
-	Ways Ways `json:"points"`
+	Ways    Ways    `json:"points"`
+	NoBuild NoBuild `json:"nobuild"`
 }
 
 // Load map waypoint data from a given JSON file
-func loadWays(name string) Ways {
+func loadWays(name string) MapData {
 	name = path.Join("assets", "maps", name)
 	log.Printf("loading %s\n", name)
 
@@ -139,7 +143,7 @@ func loadWays(name string) Ways {
 		log.Fatal(err)
 	}
 
-	return mapdata.Ways
+	return mapdata
 }
 
 // SoundType is a unique identifier to reference sound by name
