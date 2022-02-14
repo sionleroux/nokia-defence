@@ -46,10 +46,9 @@ func main() {
 	font := loadFont("assets/fonts/tiny.ttf", 6)
 
 	game := &Game{
-		Loading: true,
-		Size:    GameSize,
-		Money:   StartingMoney,
-		Font:    font,
+		Size:  GameSize,
+		Money: StartingMoney,
+		Font:  font,
 	}
 
 	go NewGame(game)
@@ -61,7 +60,7 @@ func main() {
 
 // Game represents the main game state
 type Game struct {
-	Loading       bool
+	State         int
 	Size          image.Point
 	Cursor        *Cursor
 	Maps          []*ebiten.Image
@@ -78,8 +77,18 @@ type Game struct {
 	SpawnCooldown int
 	Money         int
 	Count         int
+	TitleFrame    int
 	Font          font.Face
 }
+
+const (
+	gameStateLoading int = iota
+	gameStateTitle
+	gameStateBuild
+	gameStateWave
+	gameStateLose
+	gameStateWin
+)
 
 // NewGame sets up a new game object with default states and game objects
 func NewGame(g *Game) {
@@ -92,7 +101,7 @@ func NewGame(g *Game) {
 	g.Sounds[soundMusicTitle] = loadSoundFile("assets/music/title.ogg", sampleRate)
 	g.Sounds[soundVictorious] = loadSoundFile("assets/sfx/victorious.ogg", sampleRate)
 	g.Sounds[soundFail] = loadSoundFile("assets/sfx/fail.ogg", sampleRate)
-	music := NewMusicPlayer(g.Sounds[soundMusicConstruction], g.Mcontext)
+	music := NewMusicPlayer(g.Sounds[soundMusicTitle], g.Mcontext)
 	music.Play()
 	g.Music = music
 
@@ -126,7 +135,7 @@ func NewGame(g *Game) {
 
 	g.Cursor = NewCursor()
 
-	g.Loading = false
+	g.State = gameStateTitle
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
@@ -152,7 +161,27 @@ func (g *Game) Update() error {
 	}
 
 	// Skip updating while the game is loading
-	if g.Loading {
+	if g.State == gameStateLoading ||
+		g.State == gameStateWin ||
+		g.State == gameStateLose {
+		return nil
+	}
+
+	if g.State == gameStateTitle {
+		g.Count = (g.Count + 1) % 20
+		if g.Count == 0 {
+			g.TitleFrame++
+		}
+		if g.TitleFrame > 19 {
+			g.TitleFrame = 16 // XXX copied these from the JSON file cos I'm tired
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyX) {
+			g.State = gameStateBuild
+			g.Music.Pause()
+			music := NewMusicPlayer(g.Sounds[soundMusicConstruction], g.Mcontext)
+			music.Play()
+			g.Music = music
+		}
 		return nil
 	}
 
@@ -238,13 +267,25 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// Light background
 	screen.Fill(ColorLight)
 
-	if g.Loading {
+	if g.State == gameStateLoading {
 		// Try using text with pixel font
 		txt := "Loading..."
 		txtf, _ := font.BoundString(g.Font, txt)
 		txth := (txtf.Max.Y - txtf.Min.Y).Ceil() / 2
 		txtw := (txtf.Max.X - txtf.Min.X).Ceil() / 2
 		text.Draw(screen, txt, g.Font, g.Size.X/2-txtw, g.Size.Y/2-txth, ColorDark)
+		return
+	}
+
+	if g.State == gameStateTitle {
+		s := g.Sprites[spriteTitleScreen]
+		frame := s.Sprite[g.TitleFrame]
+		screen.DrawImage(s.Image.SubImage(image.Rect(
+			frame.Position.X,
+			frame.Position.Y,
+			frame.Position.X+frame.Position.W,
+			frame.Position.Y+frame.Position.H,
+		)).(*ebiten.Image), &ebiten.DrawImageOptions{})
 		return
 	}
 
