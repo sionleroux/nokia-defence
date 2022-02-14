@@ -171,7 +171,16 @@ func (g *Game) Update() error {
 		t := NewBasicTower(g)
 		moneydiff := g.Money - t.Cost
 		log.Printf("Buying tower %d - %d = %d\n", g.Money, t.Cost, moneydiff)
-		if moneydiff >= 0 {
+		var occupied bool
+		for _, v := range g.Towers {
+			if v.Coords == t.Coords {
+				// TODO: show upgrades menu
+				log.Println("Building space occupied")
+				occupied = true
+				break
+			}
+		}
+		if !occupied && moneydiff >= 0 {
 			g.Towers = append(g.Towers, t)
 			g.Money = moneydiff
 			g.Cursor.Cooldown = 11
