@@ -144,7 +144,7 @@ func NewGame(g *Game) {
 		Creeps{
 			NewTinyCreep(g),
 			NewSmallCreep(g),
-			NewBigCreep(g),
+			NewTinyCreep(g),
 		},
 	}
 
@@ -163,7 +163,7 @@ func (g *Game) Reset() {
 		Creeps{
 			NewTinyCreep(g),
 			NewSmallCreep(g),
-			NewBigCreep(g),
+			NewTinyCreep(g),
 		},
 	}
 	g.Money = StartingMoney
@@ -219,6 +219,22 @@ func (g *Game) Update() error {
 		return nil
 	}
 
+	if g.State == gameStateWin {
+		g.Music.Pause()
+		music := NewSoundPlayer(g.Sounds[soundVictorious], g.Mcontext)
+		music.Rewind()
+		music.Play()
+		g.Music = music
+		g.State = gameStateWaiting
+		gloat := time.NewTimer(time.Second * 2)
+		go func() {
+			log.Println("Gloating")
+			<-gloat.C
+			g.Reset()
+		}()
+		return nil
+	}
+
 	if g.State == gameStateTitle {
 		g.Count = (g.Count + 1) % 15
 		if g.Count == 0 {
@@ -248,6 +264,11 @@ func (g *Game) Update() error {
 			log.Println(err)
 			g.Creeps = append(g.Creeps[:i], g.Creeps[i+1:]...)
 		}
+	}
+
+	if g.Spawned == len(g.Waves[0]) && len(g.Creeps) <= 0 {
+		log.Println("You win")
+		g.State = gameStateWin
 	}
 
 	// Tower placement controls
