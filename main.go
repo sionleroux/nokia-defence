@@ -14,7 +14,6 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
-	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -70,10 +69,7 @@ type Game struct {
 	Waves         []Creeps
 	MapData       Ways
 	NoBuild       NoBuild // Places where you can't build
-	Sounds        []*vorbis.Stream
-	Mplayer       []*vorbis.Stream
-	Mcontext      *audio.Context
-	Music         *audio.Player
+	Sounds        []*audio.Player
 	MapIndex      int
 	Sprites       map[SpriteType]*SpriteSheet
 	Towers        Towers
@@ -101,15 +97,13 @@ func NewGame(g *Game) {
 
 	// Music
 	const sampleRate int = 44100 // assuming "normal" sample rate
-	g.Mcontext = audio.NewContext(sampleRate)
-	g.Sounds = make([]*vorbis.Stream, 4)
-	g.Sounds[soundMusicConstruction] = loadSoundFile("assets/music/construction.ogg", sampleRate)
-	g.Sounds[soundMusicTitle] = loadSoundFile("assets/music/title.ogg", sampleRate)
-	g.Sounds[soundVictorious] = loadSoundFile("assets/sfx/victorious.ogg", sampleRate)
-	g.Sounds[soundFail] = loadSoundFile("assets/sfx/fail.ogg", sampleRate)
-	music := NewMusicPlayer(g.Sounds[soundMusicTitle], g.Mcontext)
-	music.Play()
-	g.Music = music
+	context := audio.NewContext(sampleRate)
+	g.Sounds = make([]*audio.Player, 4)
+	g.Sounds[soundMusicConstruction] = NewMusicPlayer(loadSoundFile("assets/music/construction.ogg", sampleRate), context)
+	g.Sounds[soundMusicTitle] = NewMusicPlayer(loadSoundFile("assets/music/title.ogg", sampleRate), context)
+	g.Sounds[soundVictorious] = NewSoundPlayer(loadSoundFile("assets/sfx/victorious.ogg", sampleRate), context)
+	g.Sounds[soundFail] = NewSoundPlayer(loadSoundFile("assets/sfx/fail.ogg", sampleRate), context)
+	g.Sounds[soundMusicTitle].Play()
 
 	// Sprites
 	g.Sprites = make(map[SpriteType]*SpriteSheet, 12)
@@ -154,7 +148,7 @@ func NewGame(g *Game) {
 }
 
 // Reset the game to initial state, ready for a new round
-func (g *Game) Reset() {
+func (g *Game) Reset(win bool) {
 	g.Creeps = nil
 	g.Towers = nil
 	g.SpawnCooldown = 0
@@ -170,10 +164,20 @@ func (g *Game) Reset() {
 	g.Count = 0
 	g.TitleFrame = 0
 	g.Cursor = NewCursor()
-	music := NewMusicPlayer(g.Sounds[soundMusicTitle], g.Mcontext)
-	music.Play()
-	g.Music = music
-	g.State = gameStateTitle
+	if win {
+		g.State = gameStateWaiting
+		g.MapData = g.MapData2.Ways
+		g.NoBuild = g.MapData2.NoBuild
+		g.MapIndex++
+		g.Sounds[soundMusicConstruction].Play()
+		g.State = gameStateBuild
+	} else {
+		g.MapData = g.MapData1.Ways
+		g.NoBuild = g.MapData1.NoBuild
+		g.MapIndex = 0
+		g.Sounds[soundMusicTitle].Play()
+		g.State = gameStateTitle
+	}
 }
 
 // Layout is hardcoded for now, may be made dynamic in future
@@ -204,33 +208,29 @@ func (g *Game) Update() error {
 	}
 
 	if g.State == gameStateLose {
-		g.Music.Pause()
-		music := NewSoundPlayer(g.Sounds[soundFail], g.Mcontext)
-		music.Rewind()
-		music.Play()
-		g.Music = music
+		g.Sounds[soundMusicConstruction].Pause()
+		g.Sounds[soundFail].Rewind()
+		g.Sounds[soundFail].Play()
 		g.State = gameStateWaiting
 		gloat := time.NewTimer(time.Second * 4)
 		go func() {
 			log.Println("Gloating")
 			<-gloat.C
-			g.Reset()
+			g.Reset(false)
 		}()
 		return nil
 	}
 
 	if g.State == gameStateWin {
-		g.Music.Pause()
-		music := NewSoundPlayer(g.Sounds[soundVictorious], g.Mcontext)
-		music.Rewind()
-		music.Play()
-		g.Music = music
+		g.Sounds[soundMusicConstruction].Pause()
+		g.Sounds[soundVictorious].Rewind()
+		g.Sounds[soundVictorious].Play()
 		g.State = gameStateWaiting
 		gloat := time.NewTimer(time.Second * 2)
 		go func() {
 			log.Println("Gloating")
 			<-gloat.C
-			g.Reset()
+			g.Reset(true)
 		}()
 		return nil
 	}
@@ -245,10 +245,8 @@ func (g *Game) Update() error {
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyX) {
 			g.State = gameStateBuild
-			g.Music.Pause()
-			music := NewMusicPlayer(g.Sounds[soundMusicConstruction], g.Mcontext)
-			music.Play()
-			g.Music = music
+			g.Sounds[soundMusicTitle].Pause()
+			g.Sounds[soundMusicConstruction].Play()
 		}
 		return nil
 	}
