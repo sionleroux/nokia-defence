@@ -30,8 +30,8 @@ type Creep struct {
 func NewTinyCreep(g *Game) *Creep {
 	return &Creep{
 		NextWaypoint: 1,
-		Health:       500,
-		Loot:         10,
+		Health:       100,
+		Loot:         50,
 		Sprite:       g.Sprites[spriteTinyMonster],
 	}
 }
@@ -81,7 +81,6 @@ func NewWaves(g *Game) []Creeps {
 			NewTinyCreep(g),
 			NewTinyCreep(g),
 			NewSmallCreep(g),
-			NewBigCreep(g),
 			NewSmallCreep(g),
 			NewSmallCreep(g),
 			NewTinyCreep(g),
@@ -96,6 +95,7 @@ func NewWaves(g *Game) []Creeps {
 			NewBigCreep(g),
 			NewSmallCreep(g),
 			NewSmallCreep(g),
+			NewBigCreep(g),
 		},
 	}
 }
