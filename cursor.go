@@ -13,9 +13,10 @@ import (
 
 // Cursor is used to interact with game entities at the given coordinates
 type Cursor struct {
-	Coords image.Point
-	Image  *ebiten.Image
-	Width  int
+	Coords   image.Point
+	Image    *ebiten.Image
+	Cooldown int // Wait to show off construction animation
+	Width    int
 }
 
 // Update implements Entity
@@ -23,6 +24,10 @@ func (c *Cursor) Update(g *Game) error {
 	oldPos := c.Coords
 	tileSize := 7
 	hudOffset := 5
+
+	if c.Cooldown > 0 {
+		c.Cooldown--
+	}
 
 	// Movement controls
 	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
@@ -52,10 +57,14 @@ func (c *Cursor) Update(g *Game) error {
 // Move moves the player upwards
 func (c *Cursor) Move(dest image.Point) {
 	c.Coords = c.Coords.Add(dest)
+	c.Cooldown = 0
 }
 
 // Draw implements Entity
 func (c *Cursor) Draw(g *Game, screen *ebiten.Image) {
+	if c.Cooldown != 0 {
+		return
+	}
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(
 		float64(c.Coords.X-c.Width/2),

@@ -174,6 +174,7 @@ func (g *Game) Update() error {
 		if moneydiff >= 0 {
 			g.Towers = append(g.Towers, t)
 			g.Money = moneydiff
+			g.Cursor.Cooldown = 11
 		}
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyZ) {
@@ -183,6 +184,7 @@ func (g *Game) Update() error {
 		if moneydiff >= 0 {
 			g.Towers = append(g.Towers, t)
 			g.Money = moneydiff
+			g.Cursor.Cooldown = 10
 		}
 	}
 
