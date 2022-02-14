@@ -85,6 +85,16 @@ func BuyTower(g *Game) {
 	}
 }
 
+// IsOccupied says whether the current tile is already occupied by a tower
+func IsOccupied(g *Game, coords image.Point) bool {
+	for _, v := range g.Towers {
+		if v.Coords == coords {
+			return true
+		}
+	}
+	return false
+}
+
 // Update handles game logic for towers
 func (t *Tower) Update(g *Game) error {
 	// Construction animation

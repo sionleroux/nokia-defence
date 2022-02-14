@@ -335,6 +335,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	ebitenutil.DrawRect(screen, 0, 0, float64(g.Size.X), hudSize, ColorDark)
 	moneytxt := fmt.Sprintf("D%d", g.Money)
 	text.Draw(screen, moneytxt, g.Font, 1, 5, ColorLight)
+	var cost int
+	if IsOccupied(g, g.Cursor.Coords) {
+		cost = 300
+	} else {
+		cost = 200
+	}
+	costtxt := fmt.Sprintf("c%d", cost)
+	costtxtf, _ := font.BoundString(g.Font, costtxt)
+	costtxtw := (costtxtf.Max.X - costtxtf.Min.X).Ceil()
+	text.Draw(screen, costtxt, g.Font, g.Size.X-costtxtw-1, 5, ColorLight)
 
 	for _, t := range g.Towers {
 		t.Draw(g, screen)
