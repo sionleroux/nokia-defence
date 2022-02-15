@@ -1,6 +1,6 @@
 # Nokia Defence
 
-[![wakatime](https://wakatime.com/badge/user/18d7ce54-3227-40ce-a6ef-1172c081bc75/project/2f83ac17-a267-408a-a7ab-64dff5e4b9a9.svg)](https://wakatime.com/badge/user/18d7ce54-3227-40ce-a6ef-1172c081bc75/project/2f83ac17-a267-408a-a7ab-64dff5e4b9a9) [![Build Executables](https://github.com/sinisterstuf/nokia-defence/actions/workflows/build.yml/badge.svg)](https://github.com/sinisterstuf/nokia-defence/actions/workflows/build.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/sinisterstuf/nokia-defence)](https://goreportcard.com/report/github.com/sinisterstuf/nokia-defence)
+[![Build Executables](https://github.com/sinisterstuf/nokia-defence/actions/workflows/build.yml/badge.svg)](https://github.com/sinisterstuf/nokia-defence/actions/workflows/build.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/sinisterstuf/nokia-defence)](https://goreportcard.com/report/github.com/sinisterstuf/nokia-defence)
 
 A Tower Defence game for Web and Desktop written as if for the Nokia 3310:
 
