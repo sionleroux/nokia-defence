@@ -59,7 +59,7 @@ func NewBigCreep(g *Game) *Creep {
 // NewWaves makes new waves of creeps
 func NewWaves(g *Game) []Creeps {
 	return []Creeps{
-		Creeps{
+		{
 			NewSmallCreep(g),
 			NewSmallCreep(g),
 			NewSmallCreep(g),
@@ -77,7 +77,7 @@ func NewWaves(g *Game) []Creeps {
 			NewSmallCreep(g),
 			NewBigCreep(g),
 		},
-		Creeps{
+		{
 			NewTinyCreep(g),
 			NewTinyCreep(g),
 			NewSmallCreep(g),
