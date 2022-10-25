@@ -96,9 +96,13 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: 1.17
+    - name: Set up Tinygo
+      uses: acifani/setup-tinygo@v1
+      with:
+        tinygo-version: 0.25.0
     - name: Build Web binary
       shell: bash
-      run: GOOS=js GOARCH=wasm go build -v -ldflags "-w -s" -o dist/web/nokia-defence.wasm
+      run: tinygo build -no-debug -panic=trap -opt=2 -o dist/web/nokia-defence.wasm
     - name: Copy WASM exec script
       shell: bash
       run: cp $(go env GOROOT)/misc/wasm/wasm_exec.js dist/web/.
