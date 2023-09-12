@@ -23,7 +23,7 @@ import (
 var (
 	// ColorTransparent is completely transparent, used for images that aren't
 	// square shaped to show the underlying colour
-	ColorTransparent color.Color = color.RGBA{67, 82, 61, 0}
+	ColorTransparent color.Color = color.RGBA{0, 0, 0, 0}
 	// ColorLight is the ON or 1 screen colour, similar to white
 	ColorLight color.Color = color.RGBA{199, 240, 216, 255}
 	// ColorDark is the OFF or 0 screen colour, similar to black
