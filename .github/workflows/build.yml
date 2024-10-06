@@ -6,9 +6,9 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: 1.23
     - name: Install dependencies
@@ -23,16 +23,16 @@ jobs:
     needs: tests
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: 1.23
     - name: Build Windows exe
       shell: bash
       run: go build
     - name: Upload Windows exe
-      uses: actions/upload-artifact@v2.2.4
+      uses: actions/upload-artifact@v3
       with:
         name: nokia-defence-win
         path: |
@@ -44,9 +44,9 @@ jobs:
     needs: tests
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: 1.23
     - name: Build Mac exe
@@ -56,7 +56,7 @@ jobs:
       shell: bash
       run: tar -zcvf nokia-defence-mac.tar.gz nokia-defence LICENSE
     - name: Upload Mac exe
-      uses: actions/upload-artifact@v2.2.4
+      uses: actions/upload-artifact@v3
       with:
         name: nokia-defence-mac
         path: nokia-defence-mac.tar.gz
@@ -66,9 +66,9 @@ jobs:
     needs: tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: 1.23
     - name: Install dependencies
@@ -81,7 +81,7 @@ jobs:
       shell: bash
       run: tar -zcvf nokia-defence-lin.tar.gz nokia-defence LICENSE
     - name: Upload Linux exe
-      uses: actions/upload-artifact@v2.2.4
+      uses: actions/upload-artifact@v3
       with:
         name: nokia-defence-lin
         path: nokia-defence-lin.tar.gz
@@ -91,9 +91,9 @@ jobs:
     needs: tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: 1.23
     - name: Build Web binary
@@ -103,7 +103,7 @@ jobs:
       shell: bash
       run: cp $(go env GOROOT)/misc/wasm/wasm_exec.js dist/web/.
     - name: Upload Web build
-      uses: actions/upload-artifact@v2.2.4
+      uses: actions/upload-artifact@v3
       with:
         name: nokia-defence-web
         path: |
@@ -115,21 +115,21 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-lin, build-mac, build-win]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Download Windows binary
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: nokia-defence-win
     - name: Download Linux binary
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: nokia-defence-lin
     - name: Download Mac binary
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: nokia-defence-mac
     - name: Upload beta testing bundle
-      uses: actions/upload-artifact@v2.2.4
+      uses: actions/upload-artifact@v3
       with:
         name: nokia-defence-bundle
         path: |
@@ -145,7 +145,7 @@ jobs:
     needs: build-win
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: nokia-defence-win
     - uses: josephbmanley/butler-publish-itchio-action@master
@@ -163,7 +163,7 @@ jobs:
     needs: build-mac
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: nokia-defence-mac
     - name: Extract tarball
@@ -184,7 +184,7 @@ jobs:
     needs: build-lin
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: nokia-defence-lin
     - name: Extract tarball
@@ -205,7 +205,7 @@ jobs:
     needs: build-web
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: nokia-defence-web
     - uses: josephbmanley/butler-publish-itchio-action@master
